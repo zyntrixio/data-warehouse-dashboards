@@ -1,6 +1,6 @@
 with VOUCHERS_NON_ANON as (
     select * from 
-    {{ref('VOUCHERS_NON_ANON')}}
+    {{ref('voucher')}}
 )
 
 

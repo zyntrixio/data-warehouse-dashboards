@@ -10,24 +10,10 @@ version: 2
 
 models:
 
-  - name: tran__customerinsights
-    description: Customer sales statistics
+  - name: mock_brands
     config:
       tags:
-        - daily   # This is a tag that can be used to filter an action - e.g. process everything with tag 'daily'
-    # Add table-level tests
-    # tests:      # Trasformations will rarely have tests
-    columns:
-      - name: customer_id
-        description: The primary key for this table
-      - name: total_sales
-        description: Sum of all sales for the customer
-      - name: total_items
-        description: Count of all units purchased
-      - name: mean_sale_value
-        description: Average (mean) value of each sale event
-      - name: last_sale_date
-        description: Date of last sale
+        - daily  
 
 
         

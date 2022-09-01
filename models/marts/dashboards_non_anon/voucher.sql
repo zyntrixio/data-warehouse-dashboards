@@ -1,13 +1,13 @@
 with FACT_VOUCHER AS (
     SELECT * 
-    FROM {{ref('src__FACT_VOUCHER')}}
+    FROM {{ref('src__fact_voucher')}}
 
 )
 
 
 , DIM_LOYALTY_CARD AS (
     SELECT * 
-    FROM {{ref('src_DIM_LOYALTY_CARD')}}
+    FROM {{ref('src_dim_loyalty_card')}}
 
 )
 

@@ -15,4 +15,6 @@ sources:
 
       - name: DIM_LOYALTY_CARD
         description: LOYALTY Card dimension
-       
+
+      - name: DIM_USER
+        description: User dimension    
