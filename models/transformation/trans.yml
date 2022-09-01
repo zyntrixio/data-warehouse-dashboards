@@ -1,0 +1,50 @@
+version: 2
+
+# Unlike staging, transformations are performed on already staged data and do not come
+# directly from a source.
+# All transformations are defined in a single trans.yml file.
+
+# This example works out current sales statistics for each customer to suplement the
+# customer data. Though this may be connected to the customer table as just another
+# joining table, in this case it's not used.
+
+models:
+
+  - name: tran__customerinsights
+    description: Customer sales statistics
+    config:
+      tags:
+        - daily   # This is a tag that can be used to filter an action - e.g. process everything with tag 'daily'
+    # Add table-level tests
+    # tests:      # Trasformations will rarely have tests
+    columns:
+      - name: customer_id
+        description: The primary key for this table
+      - name: total_sales
+        description: Sum of all sales for the customer
+      - name: total_items
+        description: Count of all units purchased
+      - name: mean_sale_value
+        description: Average (mean) value of each sale event
+      - name: last_sale_date
+        description: Date of last sale
+
+  - name: tran__date
+    description: Standard date dimension
+    config:
+      tags:
+        - never   # This is a tag that can be used to filter an action - e.g. process everything with tag 'daily'
+    columns:
+      - name: date_day
+        description: Date - primary key for table
+
+
+  - name: tran__time
+    description: Standard time dimension
+    config:
+      tags:
+        - never   # This is a tag that can be used to filter an action - e.g. process everything with tag 'daily'
+    columns:
+      - name: time_id
+        description: Date - primary key for table
+        

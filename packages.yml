@@ -1,0 +1,29 @@
+packages:
+  # Generally really useful package
+  # https://hub.getdbt.com/dbt-labs/dbt_utils/latest/
+  - package: dbt-labs/dbt_utils
+    version: [">=0.8.0", "<0.9.0"]
+
+  # Continuous monitoring of data quality metrics, freshness, volume and schema changes,
+  # including anomaly detection, configured and executed as dbt tests.
+  # https://docs.elementary-data.com/quickstart/install-and-configure
+  - package: elementary-data/elementary
+    version: [">=0.4.0", "<0.5.0"]
+
+  # Contains a number of valuable integration tests
+  # https://hub.getdbt.com/calogica/dbt_expectations/latest/
+  - package: calogica/dbt_expectations
+    version: [">=0.5.0", "<0.6.0"]
+
+  # Applies constratins from tests (e.g. unique, relationship, etc.)
+  # https://hub.getdbt.com/snowflake-labs/dbt_constraints/latest/
+  # https://medium.com/snowflake/dbt-constraints-automatic-primary-keys-unique-keys-and-foreign-keys-for-snowflake-d78cbfdec2f9
+  - package: Snowflake-Labs/dbt_constraints
+    version: [">=0.4.0", "<0.5.0"]
+
+  # Lumilinks custom developed tests, macros, and other utilities: dbt-lumi-utils
+  - git: "git@github.com:lumilinks-group/dbt-lumi-utils.git" # git SSH URL
+    revision: "v0.1.0"
+
+  - package: dbt-labs/codegen
+    version: 0.7.0

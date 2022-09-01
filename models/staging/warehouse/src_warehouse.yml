@@ -1,0 +1,18 @@
+version: 2
+
+# One yml file per source called "scr_[source].yml"
+
+sources:
+  - name: BINK
+    description: Data for DBT template
+    database: DEV
+    schema: BINK
+    loader: DBT
+    
+    tables:
+      - name: FACT_VOUCHER
+        description:  Voucher fact table
+
+      - name: DIM_LOYALTY_CARD
+        description: LOYALTY Card dimension
+       

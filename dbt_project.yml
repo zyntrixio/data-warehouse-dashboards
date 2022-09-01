@@ -1,0 +1,79 @@
+
+# Name your project! Project names should contain only lowercase characters
+# and underscores. A good package name should reflect your organization's
+# name or the intended use of these models
+name: 'BINK_DASHBOARDS'
+version: '1.0.0'
+config-version: 2
+
+
+# This setting configures which 'profile' dbt uses for this project.
+# (found in C:\Users\[username]\.dbt\profiles.yml)
+profile: 'Bink'
+
+
+# These configurations specify where dbt should look for different types of files.
+# The `model-paths` config, for example, states that models in this project can be
+# found in the 'models/' directory. You probably won't need to change these!
+model-paths:    ['models']
+analysis-paths: ['analyses']
+test-paths:     ['tests']
+seed-paths:     ['seeds']
+macro-paths:    ['macros']
+snapshot-paths: ['snapshots']
+
+target-path: 'target'  # directory which will store compiled SQL files
+clean-targets:         # directories to be removed by `dbt clean`
+  - 'target'
+  - 'dbt_packages'
+
+
+# Variables can be defined in a number of different locations depoending on their scope.
+# Variables that will be used throughout the project (project-level scope) should be defined here.
+vars:
+  # package variables: dbt_expectations
+  'dbt_date:time_zone':     'Europe/London'           # Required for dbt_date package used by dbt_expectations
+
+  # package variables: elementary
+  'dbt_artifacts_database': testing                   # Required for elementary package
+  'dbt_artifacts_schema':   testing                   # Required for elementary package
+
+  # package variables: dbt_constraints
+  'dbt_constraints_enabled': true
+  'dbt_constraints_sources_enabled': false            # Don't apply sources by default
+  'dbt_constraints_sources_pk_enabled': false
+  'dbt_constraints_sources_uk_enabled': false
+  'dbt_constraints_sources_fk_enabled': false
+
+
+# Configuring models
+# Full documentation: https://docs.getdbt.com/docs/configuring-models
+
+# In this example config, we tell dbt to build all models in the example/ directory
+# as tables. These settings can be overridden in the individual model files
+# using the `{{ config(...) }}` macro.
+# Config indicated by + and applies to all files under models/example/
+models:
+  # This is the testing project that is included with the elementary testing macro
+  elementary:
+    +schema: TEMPLATE_MONITORING # Rename to <project>_MONITORING
+    +materialized: table
+    +transient: false
+  # This is your project
+  BINK_DASHBOARDS:
+    marts:
+      +schema: DASHBOARDS    # All transformed data to be consumed by a user goes to the "warehouse" schema
+      +materialized: table
+      DASHDBOARDS_NON_ANON:
+          +schema: DASHDBOARDS_NON_ANON
+          +materialized: table
+      temp:
+          +schema: temp
+          +database: WAREHOUSE
+          +materialized: table
+    staging:
+      +schema: STAGING_DASHBOARDS      # All staging models go to the "staging" schema
+      +materialized: view
+    transformation:
+      +schema: NON_ANON    # All transformation models go to the "staging" schema
+      +materialized: view
