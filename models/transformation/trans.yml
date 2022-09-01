@@ -29,22 +29,5 @@ models:
       - name: last_sale_date
         description: Date of last sale
 
-  - name: tran__date
-    description: Standard date dimension
-    config:
-      tags:
-        - never   # This is a tag that can be used to filter an action - e.g. process everything with tag 'daily'
-    columns:
-      - name: date_day
-        description: Date - primary key for table
 
-
-  - name: tran__time
-    description: Standard time dimension
-    config:
-      tags:
-        - never   # This is a tag that can be used to filter an action - e.g. process everything with tag 'daily'
-    columns:
-      - name: time_id
-        description: Date - primary key for table
         
