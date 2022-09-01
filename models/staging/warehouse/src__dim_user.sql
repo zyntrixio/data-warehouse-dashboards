@@ -1,9 +1,9 @@
 WITH source AS (
     SELECT * 
     FROM {{ source('BINK', 'DIM_USER') }}
-),
+)
 
-renamed AS (
+,renamed AS (
     SELECT
         USER_ID
         ,CHANNEL_ID

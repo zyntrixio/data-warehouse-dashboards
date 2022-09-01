@@ -7,7 +7,7 @@ with FACT_VOUCHER AS (
 
 , DIM_LOYALTY_CARD AS (
     SELECT * 
-    FROM {{ref('src_dim_loyalty_card')}}
+    FROM {{ref('src__dim_loyalty_card')}}
 
 )
 
