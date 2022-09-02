@@ -10,6 +10,15 @@ sources:
     loader: DBT
     
     tables:
+      - name: DIM_DATE
+        description: Dim date
+
+      - name: DIM_LOYALTY_CARD
+        description: LOYALTY Card dimension
+
+      - name: DIM_USER
+        description: User dimension   
+
       - name: FACT_LOYALTY_CARD_JOIN
         description: New LCs
 
@@ -19,11 +28,7 @@ sources:
       - name: FACT_VOUCHER
         description:  Voucher fact table
 
-      - name: DIM_DATE
-        description: Dim date
+      - name: FACT_USER
+        description:  User create / delete fact table
 
-      - name: DIM_LOYALTY_CARD
-        description: LOYALTY Card dimension
 
-      - name: DIM_USER
-        description: User dimension   
