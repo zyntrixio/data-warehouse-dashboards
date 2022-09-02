@@ -5,12 +5,30 @@ version: 2
 #   - applying final post-transform tests
 
 models:
-
-
-  - name: Fact_Sales
-    description: High-level data on sales
   
-  - name: lc_joined_deleted
+  - name: lc_registered
+    columns:
+      - name: DATE
+        description: All dates with LC changes
+
+      - name: BRAND
+        description: blah
+
+      - name: LOYALTY_PLAN_COMPANY
+        description: blah
+
+      - name: LC_CREATED
+        description: blah
+
+      - name: LC_DELETED
+        description: blah
+
+      - name: DAILY_CHANGE_IN_LC
+        description: blah
+
+      - name: TOTAL_LC_COUNT
+        description: blah
+
 
 
   - name: voucher

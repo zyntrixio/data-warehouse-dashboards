@@ -52,10 +52,10 @@ models:
     marts:
       +materialized: table
       dashboards_non_anon:
-          +schema: DASHDBOARDS_NON_ANON
+          +schema: DASHBOARDS_NON_ANON
           +materialized: table
       dashboards_anon:
-          +schema: DASHDBOARDS_ANON
+          +schema: DASHBOARDS_ANON
           +materialized: table
     staging:
       +schema: DASHBOARDS_STAGING      # All staging models go to the "staging" schema
