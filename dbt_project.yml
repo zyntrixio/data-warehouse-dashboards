@@ -25,8 +25,6 @@ snapshot-paths: ['snapshots']
 target-path: 'target'  # directory which will store compiled SQL files
 clean-targets:         # directories to be removed by `dbt clean`
   - 'target'
-  - 'dbt_packages'
-
 
 # Variables can be defined in a number of different locations depoending on their scope.
 # Variables that will be used throughout the project (project-level scope) should be defined here.
