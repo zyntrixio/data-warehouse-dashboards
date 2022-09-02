@@ -29,7 +29,7 @@ WITH mock_brands AS (
         ,DATE(lcj.EVENT_DATE_TIME) AS START_DATE
         ,DATE(lcr.EVENT_DATE_TIME) AS END_DATE
         ,b.BRAND
-        ,dlc.LOYALTY_PLAN_COMPANY
+        ,dlc.LOYALTY_PLAN_NAME
     FROM lc_join lcj
     LEFT JOIN lc_removed lcr
         ON lcj.LOYALTY_CARD_ID  = lcr.LOYALTY_CARD_ID
@@ -45,21 +45,21 @@ WITH mock_brands AS (
     SELECT
         START_DATE
         ,BRAND
-        ,LOYALTY_PLAN_COMPANY
+        ,LOYALTY_PLAN_NAME
         ,COUNT(*) c
     FROM
         lc_start_end
     GROUP BY
         START_DATE
         ,BRAND
-        ,LOYALTY_PLAN_COMPANY
+        ,LOYALTY_PLAN_NAME
 )
 
 ,lc_deletions as (
     SELECT
         END_DATE
         ,BRAND
-        ,LOYALTY_PLAN_COMPANY
+        ,LOYALTY_PLAN_NAME
         ,COUNT(*) c
     FROM
         lc_start_end
@@ -68,7 +68,7 @@ WITH mock_brands AS (
     GROUP BY
         END_DATE
         ,BRAND
-        ,LOYALTY_PLAN_COMPANY
+        ,LOYALTY_PLAN_NAME
 )
   
 ,date_range AS (
@@ -85,13 +85,13 @@ WITH mock_brands AS (
     SELECT
         START_DATE AS DATE
         ,BRAND
-        ,LOYALTY_PLAN_COMPANY
+        ,LOYALTY_PLAN_NAME
     FROM lc_creations
     UNION
     SELECT
         END_DATE AS DATE
         ,BRAND
-        ,LOYALTY_PLAN_COMPANY
+        ,LOYALTY_PLAN_NAME
     FROM lc_deletions
 ) 
 
@@ -99,22 +99,22 @@ WITH mock_brands AS (
     SELECT
         d.DATE
         ,r.BRAND
-        ,r.LOYALTY_PLAN_COMPANY
+        ,r.LOYALTY_PLAN_NAME
         ,COALESCE(lcc.C,0) AS LC_CREATED
         ,COALESCE(lcd.C,0) AS LC_DELETED
         ,LC_CREATED - LC_DELETED AS DAILY_CHANGE_IN_LC
-        ,SUM(DAILY_CHANGE_IN_LC) OVER (PARTITION BY r.BRAND, r.LOYALTY_PLAN_COMPANY ORDER BY d.DATE ASC) AS TOTAL_LC_COUNT
+        ,SUM(DAILY_CHANGE_IN_LC) OVER (PARTITION BY r.BRAND, r.LOYALTY_PLAN_NAME ORDER BY d.DATE ASC) AS TOTAL_LC_COUNT
     FROM date_range d
     LEFT JOIN union_matching_records r
         ON d.DATE = r.DATE
     LEFT JOIN lc_creations lcc
         ON d.DATE = lcc.START_DATE
             AND r.BRAND = lcc.BRAND
-            AND r.LOYALTY_PLAN_COMPANY = lcc.LOYALTY_PLAN_COMPANY
+            AND r.LOYALTY_PLAN_NAME = lcc.LOYALTY_PLAN_NAME
     LEFT JOIN lc_deletions lcd
         ON d.DATE = lcd.END_DATE
             AND r.BRAND = lcd.BRAND
-            AND r.LOYALTY_PLAN_COMPANY = lcd.LOYALTY_PLAN_COMPANY
+            AND r.LOYALTY_PLAN_NAME = lcd.LOYALTY_PLAN_NAME
 )
 
 SELECT *
@@ -122,4 +122,4 @@ FROM count_up
 ORDER BY
     DATE
     ,BRAND
-    ,LOYALTY_PLAN_COMPANY
+    ,LOYALTY_PLAN_NAME

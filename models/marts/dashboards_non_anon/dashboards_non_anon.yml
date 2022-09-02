@@ -12,22 +12,22 @@ models:
         description: All dates with LC changes
 
       - name: BRAND
-        description: blah
+        description: HSBC / LLOYDS etc
 
-      - name: LOYALTY_PLAN_COMPANY
-        description: blah
+      - name: LOYALTY_PLAN_NAME
+        description: Wasabi club etc
 
       - name: LC_CREATED
-        description: blah
+        description: Number of LC created per day, brand, and loyalty plan
 
       - name: LC_DELETED
-        description: blah
+        description: Number of LC deleted per day, brand, and loyalty plan
 
       - name: DAILY_CHANGE_IN_LC
-        description: blah
+        description: LC Created - Deleted
 
       - name: TOTAL_LC_COUNT
-        description: blah
+        description: Total LC (Rolling count) per day, brand, and loyalty plan
 
 
 
