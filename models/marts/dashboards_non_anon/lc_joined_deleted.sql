@@ -78,7 +78,7 @@ WITH mock_brands AS (
         dim_date
     WHERE
         DATE >= (SELECT MIN(START_DATE) FROM LC_START_END)
-        AND DATE <= CURRENT_DATE()
+        AND DATE <= (SELECT MAX(START_DATE) FROM LC_START_END)
 )
   
 ,union_matching_records AS (
@@ -100,7 +100,7 @@ WITH mock_brands AS (
         d.DATE
         ,r.BRAND
         ,r.LOYALTY_PLAN_COMPANY
-        ,lcc.C AS LC_CREATED
+        ,COALESCE(lcc.C,0) AS LC_CREATED
         ,COALESCE(lcd.C,0) AS LC_DELETED
         ,LC_CREATED - LC_DELETED AS DAILY_CHANGE_IN_LC
         ,SUM(DAILY_CHANGE_IN_LC) OVER (PARTITION BY r.BRAND, r.LOYALTY_PLAN_COMPANY ORDER BY d.DATE ASC) AS TOTAL_LC_COUNT
