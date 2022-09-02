@@ -54,24 +54,26 @@ vars:
 models:
   # This is the testing project that is included with the elementary testing macro
   elementary:
-    +schema: TEMPLATE_MONITORING # Rename to <project>_MONITORING
+    +schema: DASHBOARDS_MONITORING # Rename to <project>_MONITORING
     +materialized: table
     +transient: false
-  # This is your project
-  BINK_DASHBOARDS:
+  bink_dashboards:
     marts:
-      +schema: DASHBOARDS    # All transformed data to be consumed by a user goes to the "warehouse" schema
+      # +schema: DASHBOARDS    # All transformed data to be consumed by a user goes to the "warehouse" schema
       +materialized: table
-      DASHDBOARDS_NON_ANON:
+      dashboards_non_anon:
           +schema: DASHDBOARDS_NON_ANON
           +materialized: table
-      temp:
-          +schema: temp
-          +database: WAREHOUSE
+      dashboards_anon:
+          +schema: DASHDBOARDS_ANON
           +materialized: table
+      # temp:
+      #     +schema: temp
+      #     +database: WAREHOUSE
+      #     +materialized: table
     staging:
-      +schema: STAGING_DASHBOARDS      # All staging models go to the "staging" schema
+      +schema: DASHBOARDS_STAGING      # All staging models go to the "staging" schema
       +materialized: view
     transformation:
-      +schema: NON_ANON    # All transformation models go to the "staging" schema
+      +schema: DASHBOARDS_TRANSFORMATION    # All transformation models go to the "staging" schema
       +materialized: view
