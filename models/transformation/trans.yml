@@ -10,10 +10,18 @@ version: 2
 
 models:
 
-  - name: mock_brands
+  - name: trans__mock_brands
     config:
       tags:
         - daily  
 
+  - name: trans__lc_join
+    config:
+      tags:
+        - daily  
 
+  - name: trans__lc_registered
+    config:
+      tags:
+        - daily  
         

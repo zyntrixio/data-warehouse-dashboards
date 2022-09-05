@@ -5,7 +5,7 @@ WITH mock_brands AS (
 
 ,lc_join AS (
     SELECT *
-    FROM {{ref('src__fact_lc_join')}}
+    FROM {{ref('trans__lc_join')}}
 )
 
 ,lc_removed AS (
