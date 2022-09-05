@@ -5,7 +5,7 @@ WITH mock_brands AS (
 
 ,lc_register AS (
     SELECT *
-    FROM {{ref('src__fact_lc_register')}}
+    FROM {{ref('trans__lc_registered')}}
 )
 
 ,lc_removed AS (

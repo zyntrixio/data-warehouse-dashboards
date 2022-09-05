@@ -26,7 +26,7 @@ models:
         description: Number of LC join success events
 
 
-  - name: lc_registered
+  - name: lc_registered_deleted
     columns:
       - name: DATE
         description: All dates with LC changes
