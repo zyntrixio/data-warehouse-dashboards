@@ -1,6 +1,6 @@
 WITH mock_brands AS (
     SELECT *
-    FROM {{ref('mock_brands')}}
+    FROM {{ref('trans__mock_brands')}}
 )
 
 ,lc_register AS (
