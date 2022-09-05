@@ -49,6 +49,7 @@ models:
     +materialized: table
     +transient: false
   bink_dashboards:
+    +transient: false
     marts:
       +materialized: table
       dashboards_non_anon:
