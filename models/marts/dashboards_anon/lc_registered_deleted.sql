@@ -3,9 +3,9 @@ WITH mock_brands AS (
     FROM {{ref('mock_brands')}}
 )
 
-,lc_join AS (
+,lc_register AS (
     SELECT *
-    FROM {{ref('src__fact_lc_join')}}
+    FROM {{ref('src__fact_lc_register')}}
 )
 
 ,lc_removed AS (
@@ -30,7 +30,7 @@ WITH mock_brands AS (
         ,DATE(lcr.EVENT_DATE_TIME) AS END_DATE
         ,b.BRAND
         ,dlc.LOYALTY_PLAN_NAME
-    FROM lc_join lcj
+    FROM lc_register lcj
     LEFT JOIN lc_removed lcr
         ON lcj.LOYALTY_CARD_ID  = lcr.LOYALTY_CARD_ID
     LEFT JOIN mock_brands b
