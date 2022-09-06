@@ -25,6 +25,26 @@ models:
       - name: SUCCESSFUL_JOINS
         description: Number of LC join success events
 
+  - name: lc_links
+    columns:
+      - name: DATE
+        description: All dates with LC changes
+
+      - name: BRAND
+        description: HSBC / LLOYDS etc
+
+      - name: LOYALTY_PLAN_NAME
+        description: Wasabi club etc
+
+      - name: PENDING_JOINS
+        description: Number of LC join pending events
+
+      - name: FAILED_JOINS
+        description: Number of LC join failed events
+
+      - name: SUCCESSFUL_JOINS
+        description: Number of LC join success events
+
 
   - name: lc_registered_deleted
     columns:

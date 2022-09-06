@@ -19,8 +19,7 @@ lc_status_change AS (
 
 ,lc_links AS (
     SELECT
-        sc.EVENT_DATE_TIME AS STATUS_EVENT_DATE_TIME
-        ,a.EVENT_DATE_TIME AS ADD_LC_EVENT_DATE_TIME
+        sc.EVENT_DATE_TIME AS EVENT_DATE_TIME
         ,a.EVENT_TYPE
         ,a.AUTH_TYPE
         ,a.LOYALTY_CARD_ID
