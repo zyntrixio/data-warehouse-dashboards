@@ -1,10 +1,23 @@
 version: 2
 
-# This is a key file for:
-#   - documenting the output fields
-#   - applying final post-transform tests
-
 models:
+  - name: lc_create_events
+    columns:
+      - name: DATE
+        description: All dates with LC additions
+
+      - name: BRAND
+        description: HSBC / LLOYDS etc
+
+      - name: LOYALTY_PLAN_NAME
+        description: Wasabi club etc
+
+      - name: NEW_LOYALTY_LINKS
+        description: New LC added wallet through auth & add_auth
+
+      - name: NEW_LOYALTY_JOINS
+        description: New LC added wallet through join & register
+
   - name: lc_joins
     columns:
       - name: DATE
