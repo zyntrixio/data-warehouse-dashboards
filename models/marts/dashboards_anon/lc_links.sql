@@ -3,9 +3,10 @@ WITH mock_brands AS (
     FROM {{ref('trans__mock_brands')}}
 )
 
-,lc_link AS (
+,lc_join AS (
     SELECT *
-    FROM {{ref('trans__lc_link')}}
+    FROM {{ref('src__fact_lc_add')}}
+    WHERE AUTH_TYPE IN ('AUTH', 'ADD AUTH')
 )
 
 ,dim_lc AS (
@@ -13,25 +14,39 @@ WITH mock_brands AS (
     FROM {{ref('src__dim_loyalty_card')}}
 )
 
-,dim_date AS (
-    SELECT *
-    FROM {{ref('src__dim_date')}}
+,rank_events as (
+    SELECT
+        LOYALTY_CARD_ID
+        ,EVENT_TYPE
+        ,EVENT_DATE_TIME
+        ,DATE(EVENT_DATE_TIME) AS DATE
+        ,USER_ID
+        ,ROW_NUMBER() OVER (PARTITION BY LOYALTY_CARD_ID, DATE, USER_ID ORDER BY EVENT_DATE_TIME DESC) AS DAY_ORDER
+    FROM
+        lc_join
 )
 
-,link_events as (
-SELECT
-        lcj.LOYALTY_CARD_ID
-        ,lcj.STATUS_GROUPING
-        ,DATE(lcj.EVENT_DATE_TIME) AS DATE
+,last_events_per_day AS (
+    SELECT *
+    FROM rank_events
+    WHERE DAY_ORDER = 1
+)
+
+,select_filter_columns AS (
+    SELECT
+        lcj.DATE
         ,b.BRAND
         ,dlc.LOYALTY_PLAN_NAME
+        ,EVENT_TYPE
     FROM
-        lc_link lcj
+        last_events_per_day lcj
     LEFT JOIN mock_brands b
         ON lcj.USER_ID = b.USER_ID
     LEFT JOIN dim_lc dlc
         ON dlc.LOYALTY_CARD_ID = lcj.LOYALTY_CARD_ID
-
+    WHERE
+        b.BRAND IS NOT NULL
+        AND dlc.LOYALTY_PLAN_NAME IS NOT NULL
 )
 
 ,aggregate_events AS (
@@ -39,33 +54,16 @@ SELECT
         DATE
         ,BRAND
         ,LOYALTY_PLAN_NAME
-        ,COUNT(CASE WHEN STATUS_GROUPING = 'PENDING' THEN 1 END) AS PENDING_JOINS
-        ,COUNT(CASE WHEN STATUS_GROUPING = 'FAILED' THEN 1 END) AS FAILED_JOINS
-        ,COUNT(CASE WHEN STATUS_GROUPING = 'SUCCESS' THEN 1 END) AS SUCCESSFUL_JOINS
+        ,COUNT(CASE WHEN EVENT_TYPE = 'REQUEST' THEN 1 END) AS REQUEST_PENDING
+        ,COUNT(CASE WHEN EVENT_TYPE = 'FAILED' THEN 1 END) AS FAILED_JOINS
+        ,COUNT(CASE WHEN EVENT_TYPE = 'SUCCESS' THEN 1 END) AS SUCCESSFUL_JOINS
     FROM
-        link_events
+        select_filter_columns
     GROUP BY 
         DATE
         ,BRAND
         ,LOYALTY_PLAN_NAME
 )
 
-,counting_columns AS (
-    SELECT
-        DATE
-        ,BRAND
-        ,LOYALTY_PLAN_NAME
-        ,PENDING_JOINS
-        ,FAILED_JOINS
-        ,SUCCESSFUL_JOINS
-        ,SUM(SUCCESSFUL_JOINS) OVER (PARTITION BY BRAND, LOYALTY_PLAN_NAME ORDER BY DATE ASC) AS TOTAL_SUCCESSFUL_JOINS
-    FROM
-        aggregate_events
-)
-
 SELECT *
-FROM counting_columns
-ORDER BY
-    DATE
-    ,BRAND
-    ,LOYALTY_PLAN_NAME
+FROM aggregate_events
