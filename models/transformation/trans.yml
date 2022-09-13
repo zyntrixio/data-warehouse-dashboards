@@ -10,41 +10,18 @@ version: 2
 
 models:
 
-  - name: tran__customerinsights
-    description: Customer sales statistics
+  - name: trans__mock_brands
     config:
       tags:
-        - daily   # This is a tag that can be used to filter an action - e.g. process everything with tag 'daily'
-    # Add table-level tests
-    # tests:      # Trasformations will rarely have tests
-    columns:
-      - name: customer_id
-        description: The primary key for this table
-      - name: total_sales
-        description: Sum of all sales for the customer
-      - name: total_items
-        description: Count of all units purchased
-      - name: mean_sale_value
-        description: Average (mean) value of each sale event
-      - name: last_sale_date
-        description: Date of last sale
+        - daily  
 
-  - name: tran__date
-    description: Standard date dimension
+  - name: trans__lc_join
     config:
       tags:
-        - never   # This is a tag that can be used to filter an action - e.g. process everything with tag 'daily'
-    columns:
-      - name: date_day
-        description: Date - primary key for table
+        - daily  
 
-
-  - name: tran__time
-    description: Standard time dimension
+  - name: trans__lc_registered
     config:
       tags:
-        - never   # This is a tag that can be used to filter an action - e.g. process everything with tag 'daily'
-    columns:
-      - name: time_id
-        description: Date - primary key for table
+        - daily  
         
