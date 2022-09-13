@@ -6,21 +6,26 @@ with source as (
 
 renamed as (
 
-    select
-        voucher_code,
-        loyalty_card_id,
-        loyalty_plan_id,
-        state,
-        voucher_type,
-        date_redeemed,
-        date_issued,
-        expiry_date,
-        redemption_tracked,
-        time_to_redemption,
-        days_left_on_vouchers,
-        days_valid_for
-
-    from source
+SELECT  
+     EVENT_DATE_TIME
+    ,loyalty_card_id
+    ,current_channel
+    ,user_id
+    ,state
+    ,earn_type
+    ,voucher_code
+    ,date_redeemed
+    ,date_issued
+    ,expiry_date
+    ,issued
+    ,issued_channel
+    ,redemed
+    ,redeemed_channel
+       ,redemption_tracked
+       ,time_to_redemption
+       ,days_left_on_vouchers
+       ,days_valid_for
+FROM source
 
 )
 
