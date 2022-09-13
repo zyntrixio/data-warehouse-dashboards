@@ -44,5 +44,8 @@ sources:
 
       - name: FACT_USER
         description:  User create / delete fact table
+      
+      - name: DIM_LOYALTY_CARD_ACTIVE_SCD
+        description: One row per LOYALTY card add per account includes removals.
 
 

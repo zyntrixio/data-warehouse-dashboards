@@ -3,57 +3,49 @@ with VOUCHERS_NON_ANON as (
     {{ref('voucher')}}
 )
 
+, mock_brands as (
+    select * 
+    from {{ref('trans__mock_brands')}}
+)
+
 
 , num as (
-    select 
-        loyalty_card_id,
-        user_id,
-        loyalty_plan_id,
-        voucher_code,
-        loyalty_plan_company,
-        loyalty_plan_slug,
-        loyalty_plan_tier,
-        loyalty_plan_name_card,
-        loyalty_plan_name,
-        loyalty_plan_category, 
-        state,
-        date_redeemed,
-        date_issued,
-        expiry_date,
-        redemption_tracked,
-        time_to_redemption,
-        days_left_on_vouchers,
-        days_valid_for,
-        issued,
-        issued_channel,
-        redemed,
-        redeemed_channel
-    from VOUCHERS_NON_ANON
+SELECT  LOYALTY_CARD_ID
+       ,USER_ID
+       ,CHANNEL
+       ,state
+       ,earn_type
+       ,voucher_code
+       ,REDEMPTION_TRACKED
+       ,DATE_REDEEMED
+       ,DATE_ISSUED
+       ,EXPIRY_DATE
+       ,TIME_TO_REDEMPTION
+       ,DAYS_VALID_FOR
+       ,days_left_on_vouchers
+FROM VOUCHERS_NON_ANON
 )
 
 , anon as (
-    select loyalty_plan_company,
-            loyalty_plan_slug,
-            loyalty_plan_tier,
-            loyalty_plan_name_card,
-            loyalty_plan_name,
-            loyalty_plan_category,
-            md5(voucher_code) voucher_code ,
-            md5(loyalty_card_id) as loyalty_card_id,
-            loyalty_plan_id ,
-            state,
-            date_redeemed,
-            date_issued,
-            expiry_date,
-            redemption_tracked,
-            time_to_redemption,
-            days_left_on_vouchers,
-            days_valid_for,
-            issued,
-            issued_channel,
-            redemed,
-            redeemed_channel
-    from num
+    select 
+        n.LOYALTY_CARD_ID
+       ,n.USER_ID
+       ,case when n.CHANNEL = 'com.barclays.bmb' then m.brand
+                else n.channel
+       end as channel
+       ,state
+       ,earn_type
+       ,md5(voucher_code) as voucher_code
+       ,REDEMPTION_TRACKED
+       ,DATE_REDEEMED
+       ,DATE_ISSUED
+       ,EXPIRY_DATE
+       ,TIME_TO_REDEMPTION
+       ,DAYS_VALID_FOR
+       ,days_left_on_vouchers
+from num n
+left join mock_brands  m
+on n.user_id = m.user_id
 )
 
 select *
