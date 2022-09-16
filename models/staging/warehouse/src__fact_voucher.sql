@@ -7,15 +7,15 @@ with source as (
 renamed as (
 
     select
-        voucher_code,
+        created,
         loyalty_card_id,
-        loyalty_plan_id,
         state,
-        voucher_type,
+        earn_type,
+        voucher_code,
+        redemption_tracked,
         date_redeemed,
         date_issued,
         expiry_date,
-        redemption_tracked,
         time_to_redemption,
         days_left_on_vouchers,
         days_valid_for
