@@ -51,6 +51,7 @@ WITH mock_brands AS (
     FROM lc_add lca
     LEFT JOIN lc_removed lcr
         ON lca.LOYALTY_CARD_ID  = lcr.LOYALTY_CARD_ID
+        AND lca.USER_ID = lcr.USER_ID
     WHERE
         EVENT_TYPE = 'SUCCESS'
 )
