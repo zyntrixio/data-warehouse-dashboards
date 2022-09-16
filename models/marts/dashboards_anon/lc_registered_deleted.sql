@@ -34,6 +34,7 @@ WITH mock_brands AS (
     LEFT JOIN lc_removed lcr
         ON lcj.LOYALTY_CARD_ID  = lcr.LOYALTY_CARD_ID
         AND lcj.USER_ID = lcr.USER_ID
+        AND lcj.CHANNEL = lcr.CHANNEL
     LEFT JOIN mock_brands b
         ON lcj.USER_ID = b.USER_ID
     LEFT JOIN dim_lc dlc
