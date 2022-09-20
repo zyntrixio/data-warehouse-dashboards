@@ -20,7 +20,7 @@ stg_users AS (
             N IN (1,3,7)
                 THEN 'LLOYDS'
             WHEN N IN (2,4)
-                THEN 'HSBC'
+                THEN 'BANK OF SCOTLAND'
             ELSE 'HALIFAX'
             END AS BRAND
     FROM mock_brands
