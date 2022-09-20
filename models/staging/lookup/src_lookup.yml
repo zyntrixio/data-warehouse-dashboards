@@ -1,0 +1,15 @@
+version: 2
+
+# One yml file per source called "scr_[source].yml"
+
+sources:
+  - name: BINK_LOOKUP
+    description: Bink lookup data
+    schema: BINK_STAGING
+    loader: DBT
+    
+    tables:
+      - name: STG_LOOKUP__SCHEME_ACCOUNT_STATUS
+        description: LC Status lookup
+
+      

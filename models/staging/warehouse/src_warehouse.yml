@@ -5,14 +5,47 @@ version: 2
 sources:
   - name: BINK
     description: Data for DBT template
-    database: DEV
     schema: BINK
     loader: DBT
     
     tables:
-      - name: FACT_VOUCHER
-        description:  Voucher fact table
+      - name: DIM_DATE
+        description: Dim date
 
       - name: DIM_LOYALTY_CARD
         description: LOYALTY Card dimension
-       
+
+      - name: DIM_USER
+        description: User dimension   
+
+      - name: FACT_LOYALTY_CARD_ADD
+        description: All new LCs
+
+      - name: FACT_LOYALTY_CARD_ADD_AUTH
+        description: New LCs via add_auth route
+
+      - name: FACT_LOYALTY_CARD_AUTH
+        description: New LCs via auth route
+
+      - name: FACT_LOYALTY_CARD_JOIN
+        description: New LCs via join route
+
+      - name: FACT_LOYALTY_CARD_REGISTER
+        description: New LCs via register route
+
+      - name: FACT_LOYALTY_CARD_REMOVED
+        description: LCs deleted
+
+      - name: FACT_LOYALTY_CARD_STATUS_CHANGE
+        description: LC status change
+
+      - name: FACT_VOUCHER
+        description:  Voucher fact table
+
+      - name: FACT_USER
+        description:  User create / delete fact table
+      
+      - name: DIM_LOYALTY_CARD_ACTIVE_SCD
+        description: One row per LOYALTY card add per account includes removals.
+
+
