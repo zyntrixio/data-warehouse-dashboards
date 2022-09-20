@@ -25,7 +25,7 @@ WITH mock_brands AS (
     FROM
         lc_join
     QUALIFY
-        DAY_ORDER = 1
+        DAY_ORDER = 1 -- Selects just the last event of the day
 )
 
 ,select_filter_columns AS (
