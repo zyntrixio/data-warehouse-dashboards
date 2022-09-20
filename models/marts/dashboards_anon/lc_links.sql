@@ -24,12 +24,8 @@ WITH mock_brands AS (
         ,ROW_NUMBER() OVER (PARTITION BY LOYALTY_CARD_ID, DATE, USER_ID ORDER BY EVENT_DATE_TIME DESC) AS DAY_ORDER
     FROM
         lc_join
-)
-
-,last_events_per_day AS (
-    SELECT *
-    FROM rank_events
-    WHERE DAY_ORDER = 1
+    QUALIFY
+        DAY_ORDER = 1 -- Selects just the last event of the day
 )
 
 ,select_filter_columns AS (
@@ -39,7 +35,7 @@ WITH mock_brands AS (
         ,dlc.LOYALTY_PLAN_NAME
         ,EVENT_TYPE
     FROM
-        last_events_per_day lcj
+        rank_events lcj
     LEFT JOIN mock_brands b
         ON lcj.USER_ID = b.USER_ID
     LEFT JOIN dim_lc dlc

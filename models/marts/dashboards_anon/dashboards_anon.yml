@@ -18,6 +18,30 @@ models:
       - name: NEW_LOYALTY_JOINS
         description: New LC added wallet through join & register
 
+  - name: lc_joins_snapshot
+    description: On any given day, how many Joined LCs are in a particular state
+    columns:
+      - name: DATE
+        description: All dates
+
+      - name: BRAND
+        description: HSBC / LLOYDS etc
+
+      - name: LOYALTY_PLAN_NAME
+        description: Wasabi club etc
+
+      - name: SUCCESS_STATE
+        description: Number of LCs in success state
+
+      - name: FAILED_STATE
+        description: Number of LCs in failed state
+
+      - name: REQUEST_STATE
+        description: Number of LCs in request state
+
+      - name: REMOVED_STATE
+        description: Number of LCs in removed state
+
   - name: lc_joins
     columns:
       - name: DATE
@@ -37,6 +61,30 @@ models:
 
       - name: SUCCESSFUL_JOINS
         description: Number of LC join success events
+
+  - name: lc_links_snapshot
+    description: On any given day, how many Linked LCs are in a particular state
+    columns:
+      - name: DATE
+        description: All dates
+
+      - name: BRAND
+        description: HSBC / LLOYDS etc
+
+      - name: LOYALTY_PLAN_NAME
+        description: Wasabi club etc
+
+      - name: SUCCESS_STATE
+        description: Number of LCs in success state
+
+      - name: FAILED_STATE
+        description: Number of LCs in failed state
+
+      - name: REQUEST_STATE
+        description: Number of LCs in request state
+
+      - name: REMOVED_STATE
+        description: Number of LCs in removed state
 
   - name: lc_links
     columns:
