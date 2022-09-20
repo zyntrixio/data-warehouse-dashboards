@@ -9,6 +9,9 @@ with VOUCHERS_NON_ANON as (
 )
 
 
+
+
+
 , num as (
 SELECT  LOYALTY_CARD_ID
        ,USER_ID
@@ -23,6 +26,9 @@ SELECT  LOYALTY_CARD_ID
        ,TIME_TO_REDEMPTION
        ,DAYS_VALID_FOR
        ,days_left_on_vouchers
+       ,loyalty_plan_company
+       ,loyalty_plan_name
+       ,loyalty_card_created
 FROM VOUCHERS_NON_ANON
 )
 
@@ -43,6 +49,9 @@ FROM VOUCHERS_NON_ANON
        ,TIME_TO_REDEMPTION
        ,DAYS_VALID_FOR
        ,days_left_on_vouchers
+       ,loyalty_plan_company
+       ,loyalty_plan_name
+       ,loyalty_card_created
 from num n
 left join mock_brands  m
 on n.user_id = m.user_id
