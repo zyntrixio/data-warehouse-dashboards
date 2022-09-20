@@ -5,10 +5,18 @@ with FACT_VOUCHER AS (
 )
 
 
-, DIM_LOYALTY_CARD AS (
+, DIM_LOYALTY_CARD_scd AS (
     SELECT * 
     FROM {{ref('src__dim_loyalty_card_active_scd')}}
 )
+
+
+
+, DIM_LOYALTY_CARD AS (
+    SELECT * 
+    FROM {{ref('src__dim_loyalty_card')}}
+)
+
 
 
 ,issued as (
@@ -27,7 +35,7 @@ SELECT  v.LOYALTY_CARD_ID
        ,l.channel
        ,l.removed
 FROM FACT_VOUCHER v
-INNER JOIN DIM_LOYALTY_CARD l
+INNER JOIN DIM_LOYALTY_CARD_scd l
 ON v.date_issued BETWEEN l.valid_from AND l.valid_to AND v.loyalty_card_id = l.loyalty_card_id
 )
 
@@ -49,7 +57,7 @@ SELECT  v.LOYALTY_CARD_ID
        ,l.channel
        ,l.removed
 FROM FACT_VOUCHER v
-INNER JOIN DIM_LOYALTY_CARD l
+INNER JOIN DIM_LOYALTY_CARD_scd l
 ON v.DATE_REDEEMED BETWEEN l.valid_from AND l.valid_to AND v.loyalty_card_id = l.loyalty_card_id
   
   )
@@ -78,4 +86,10 @@ ORDER BY i.voucher_code
   )
 
 
-  select * from final 
+  select f.* ,
+  dl.loyalty_plan_company,
+  dl.loyalty_plan_name,
+  dl.created as loyalty_card_created
+  from final f
+  left join DIM_LOYALTY_CARD dl 
+  on dl.loyalty_card_id = f.LOYALTY_CARD_ID
