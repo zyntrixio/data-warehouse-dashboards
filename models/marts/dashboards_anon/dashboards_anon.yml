@@ -1,6 +1,44 @@
 version: 2
 
 models:
+  - name: errors
+    columns:
+      - name: STATUS_ID
+        description: Error 
+
+      - name: STATUS_DESCRIPTION
+        description: Description of errror
+
+      - name: STATUS_GROUP
+        description: User error / system error
+
+      - name: STATUS_ROLLUP
+        description: Summary of error
+
+      - name: BRAND
+        description: HSBC / LLOYDS etc
+
+      - name: LOYALTY_PLAN_NAME
+        description: Wasabi club etc
+
+      - name: REPEATED_STATUS
+        description: Is error immediately repeated
+
+      - name: TO_RESOLVED
+        description: Is error immediately resolved to a succesful state
+
+      - name: IS_RESOLVED
+        description: Is error eventually resolved to a succesful state
+
+      - name: IS_FINAL_STATE
+        description: Is final status
+
+      - name: STATUS_START_TIME
+        description: Error event time
+
+      - name: STATUS_END_TIME
+        description: Time of next status
+
   - name: lc_create_events
     columns:
       - name: DATE
