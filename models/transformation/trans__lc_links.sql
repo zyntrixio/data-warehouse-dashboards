@@ -33,7 +33,7 @@ WITH mock_brands AS (
         lcj.DATE
         ,b.BRAND
         ,dlc.LOYALTY_PLAN_NAME
-        ,EVENT_TYPE
+        ,EVENT_TYPE AS LINK_EVENT_TYPE
     FROM
         rank_events lcj
     LEFT JOIN mock_brands b
@@ -45,21 +45,21 @@ WITH mock_brands AS (
         AND dlc.LOYALTY_PLAN_NAME IS NOT NULL
 )
 
-,aggregate_events AS (
-    SELECT
-        DATE
-        ,BRAND
-        ,LOYALTY_PLAN_NAME
-        ,COUNT(CASE WHEN EVENT_TYPE = 'REQUEST' THEN 1 END) AS REQUEST_PENDING
-        ,COUNT(CASE WHEN EVENT_TYPE = 'FAILED' THEN 1 END) AS FAILED_JOINS
-        ,COUNT(CASE WHEN EVENT_TYPE = 'SUCCESS' THEN 1 END) AS SUCCESSFUL_JOINS
-    FROM
-        select_filter_columns
-    GROUP BY 
-        DATE
-        ,BRAND
-        ,LOYALTY_PLAN_NAME
-)
+-- ,aggregate_events AS (
+--     SELECT
+--         DATE
+--         ,BRAND
+--         ,LOYALTY_PLAN_NAME
+--         ,COUNT(CASE WHEN EVENT_TYPE = 'REQUEST' THEN 1 END) AS REQUEST_PENDING
+--         ,COUNT(CASE WHEN EVENT_TYPE = 'FAILED' THEN 1 END) AS FAILED_JOINS
+--         ,COUNT(CASE WHEN EVENT_TYPE = 'SUCCESS' THEN 1 END) AS SUCCESSFUL_JOINS
+--     FROM
+--         select_filter_columns
+--     GROUP BY 
+--         DATE
+--         ,BRAND
+--         ,LOYALTY_PLAN_NAME
+-- )
 
 SELECT *
-FROM aggregate_events
+FROM select_filter_columns

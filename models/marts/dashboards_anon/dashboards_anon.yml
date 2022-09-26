@@ -80,25 +80,25 @@ models:
       - name: REMOVED_STATE
         description: Number of LCs in removed state
 
-  - name: lc_joins
-    columns:
-      - name: DATE
-        description: All dates with LC changes
+  # - name: lc_joins
+  #   columns:
+  #     - name: DATE
+  #       description: All dates with LC changes
 
-      - name: BRAND
-        description: HSBC / LLOYDS etc
+  #     - name: BRAND
+  #       description: HSBC / LLOYDS etc
 
-      - name: LOYALTY_PLAN_NAME
-        description: Wasabi club etc
+  #     - name: LOYALTY_PLAN_NAME
+  #       description: Wasabi club etc
 
-      - name: REQUESTED_JOINS
-        description: Number of LC join request events
+  #     - name: REQUESTED_JOINS
+  #       description: Number of LC join request events
 
-      - name: FAILED_JOINS
-        description: Number of LC join failed events
+  #     - name: FAILED_JOINS
+  #       description: Number of LC join failed events
 
-      - name: SUCCESSFUL_JOINS
-        description: Number of LC join success events
+  #     - name: SUCCESSFUL_JOINS
+  #       description: Number of LC join success events
 
   - name: lc_links_snapshot
     description: On any given day, how many Linked LCs are in a particular state
@@ -124,7 +124,7 @@ models:
       - name: REMOVED_STATE
         description: Number of LCs in removed state
 
-  - name: lc_links
+  - name: lc_joins_links
     columns:
       - name: DATE
         description: All dates with LC changes

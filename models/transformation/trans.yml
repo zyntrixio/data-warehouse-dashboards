@@ -14,14 +14,43 @@ models:
     config:
       tags:
         - daily  
-
-  - name: trans__lc_join
-    config:
-      tags:
-        - daily  
-
-  - name: trans__lc_registered
-    config:
-      tags:
-        - daily  
         
+  - name: trans__lc_joins
+    columns:
+      - name: DATE
+        description: All dates with LC changes
+
+      - name: BRAND
+        description: HSBC / LLOYDS etc
+
+      - name: LOYALTY_PLAN_NAME
+        description: Wasabi club etc
+
+      - name: REQUESTED_JOINS
+        description: Number of LC join request events
+
+      - name: FAILED_JOINS
+        description: Number of LC join failed events
+
+      - name: SUCCESSFUL_JOINS
+        description: Number of LC join success events
+
+  - name: trans__lc_links
+    columns:
+      - name: DATE
+        description: All dates with LC changes
+
+      - name: BRAND
+        description: HSBC / LLOYDS etc
+
+      - name: LOYALTY_PLAN_NAME
+        description: Wasabi club etc
+
+      - name: REQUESTED_JOINS
+        description: Number of LC join request events
+
+      - name: FAILED_JOINS
+        description: Number of LC join failed events
+
+      - name: SUCCESSFUL_JOINS
+        description: Number of LC join success events
