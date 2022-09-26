@@ -28,22 +28,22 @@ WITH mock_brands AS (
         DAY_ORDER = 1 -- Selects just the last event of the day
 )
 
-,select_filter_columns AS (
-    SELECT
-        lcj.DATE
-        ,b.BRAND
-        ,dlc.LOYALTY_PLAN_NAME
-        ,EVENT_TYPE AS LINK_EVENT_TYPE
-    FROM
-        rank_events lcj
-    LEFT JOIN mock_brands b
-        ON lcj.USER_ID = b.USER_ID
-    LEFT JOIN dim_lc dlc
-        ON dlc.LOYALTY_CARD_ID = lcj.LOYALTY_CARD_ID
-    WHERE
-        b.BRAND IS NOT NULL
-        AND dlc.LOYALTY_PLAN_NAME IS NOT NULL
-)
+-- ,select_filter_columns AS (
+--     SELECT
+--         lcj.DATE
+--         ,b.BRAND
+--         ,dlc.LOYALTY_PLAN_NAME
+--         ,EVENT_TYPE AS LINK_EVENT_TYPE
+--     FROM
+--         rank_events lcj
+--     LEFT JOIN mock_brands b
+--         ON lcj.USER_ID = b.USER_ID
+--     LEFT JOIN dim_lc dlc
+--         ON dlc.LOYALTY_CARD_ID = lcj.LOYALTY_CARD_ID
+--     WHERE
+--         b.BRAND IS NOT NULL
+--         AND dlc.LOYALTY_PLAN_NAME IS NOT NULL
+-- )
 
 -- ,aggregate_events AS (
 --     SELECT
@@ -62,4 +62,4 @@ WITH mock_brands AS (
 -- )
 
 SELECT *
-FROM select_filter_columns
+FROM rank_events
