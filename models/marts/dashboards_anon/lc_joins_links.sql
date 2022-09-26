@@ -1,11 +1,13 @@
 WITH lc_joins AS (
     SELECT *
-    FROM {{ref('trans__lc_joins')}}
+    FROM {{ref('src__fact_lc_add')}}
+    WHERE AUTH_TYPE IN ('JOIN', 'REGISTER')
 )
 
 ,lc_links AS (
     SELECT *
-    FROM {{ref('trans__lc_links')}}
+    FROM {{ref('src__fact_lc_add')}}
+    WHERE AUTH_TYPE IN ('AUTH', 'ADD AUTH')
 )
 
 ,mock_brands AS (
@@ -20,7 +22,7 @@ WITH lc_joins AS (
 
 ,base_table AS (
     SELECT
-        DATE
+        DATE(EVENT_DATE_TIME) AS DATE
         ,LOYALTY_CARD_ID
         ,EVENT_TYPE
         ,USER_ID
@@ -28,7 +30,7 @@ WITH lc_joins AS (
     FROM lc_joins
     UNION ALL
     SELECT
-        DATE
+        DATE(EVENT_DATE_TIME) AS DATE
         ,LOYALTY_CARD_ID
         ,EVENT_TYPE
         ,USER_ID
