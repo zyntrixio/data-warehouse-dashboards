@@ -105,6 +105,15 @@ WITH lc_joins AS (
         ,BRAND
         ,LOYALTY_PLAN_NAME
         ,LOYALTY_PLAN_COMPANY
+    HAVING
+        JOIN_REQUEST_PENDING != 0
+        OR JOIN_FAILED != 0
+        OR JOIN_SUCCESSFUL != 0
+        OR JOIN_DELETE != 0
+        OR LINK_REQUEST_PENDING != 0
+        OR LINK_FAILED != 0
+        OR LINK_SUCCESSFUL != 0
+        OR LINK_DELETE != 0
 )
 
 SELECT *

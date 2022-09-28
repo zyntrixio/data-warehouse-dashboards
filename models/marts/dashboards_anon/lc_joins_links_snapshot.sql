@@ -129,6 +129,16 @@ WITH mock_brands AS (
         DATE IS NOT NULL
         AND LOYALTY_PLAN_NAME IS NOT NULL
         AND BRAND IS NOT NULL
+        AND (
+            JOIN_SUCCESS_STATE != 0
+            OR JOIN_FAILED_STATE != 0
+            OR JOIN_PENDING_STATE != 0
+            OR JOIN_REMOVED_STATE != 0
+            OR LINK_SUCCESS_STATE != 0
+            OR LINK_FAILED_STATE != 0
+            OR LINK_PENDING_STATE != 0
+            OR LINK_REMOVED_STATE != 0
+        )
 )
 
 SELECT *
