@@ -10,6 +10,11 @@ WITH lc_joins AS (
     WHERE AUTH_TYPE IN ('AUTH', 'ADD AUTH')
 )
 
+,lc_removed AS (
+    SELECT *
+    FROM {{ref('src__fact_lc_removed')}}
+)
+
 ,mock_brands AS (
     SELECT *
     FROM {{ref('trans__mock_brands')}}
@@ -38,6 +43,27 @@ WITH lc_joins AS (
     FROM lc_links
 )
 
+,add_deletes AS (
+    SELECT
+        DATE(lcr.EVENT_DATE_TIME) AS DATE
+        ,lcr.LOYALTY_CARD_ID
+        ,'DELETE'AS EVENT_TYPE
+        ,lcr.USER_ID
+        ,lc.ADD_JOURNEY
+    FROM lc_removed lcr
+    LEFT JOIN base_table lc ON -- NEED to check no double counts
+        lc.LOYALTY_CARD_ID = lcr.LOYALTY_CARD_ID
+        AND lc.USER_ID = lcr.USER_ID
+) 
+
+,union_tables AS (
+    SELECT *
+    FROM base_table
+    UNION ALL
+    SELECT *
+    FROM add_deletes
+)
+
 ,select_filter_columns AS (
     SELECT
         lc.DATE
@@ -46,7 +72,7 @@ WITH lc_joins AS (
         ,EVENT_TYPE
         ,ADD_JOURNEY
     FROM
-        base_table lc
+        union_tables lc
     LEFT JOIN mock_brands b
         ON lc.USER_ID = b.USER_ID
     LEFT JOIN dim_lc dlc
@@ -64,9 +90,12 @@ WITH lc_joins AS (
         ,COUNT(CASE WHEN EVENT_TYPE = 'REQUEST' AND ADD_JOURNEY = 'JOIN' THEN 1 END) AS JOIN_REQUEST_PENDING
         ,COUNT(CASE WHEN EVENT_TYPE = 'FAILED' AND ADD_JOURNEY = 'JOIN' THEN 1 END) AS JOIN_FAILED
         ,COUNT(CASE WHEN EVENT_TYPE = 'SUCCESS' AND ADD_JOURNEY = 'JOIN' THEN 1 END) AS JOIN_SUCCESSFUL
+        ,COUNT(CASE WHEN EVENT_TYPE = 'DELETE' AND ADD_JOURNEY = 'JOIN' THEN 1 END) AS JOIN_DELETE
+
         ,COUNT(CASE WHEN EVENT_TYPE = 'REQUEST' AND ADD_JOURNEY = 'LINK' THEN 1 END) AS LINK_REQUEST_PENDING
         ,COUNT(CASE WHEN EVENT_TYPE = 'FAILED' AND ADD_JOURNEY = 'LINK' THEN 1 END) AS LINK_FAILED
         ,COUNT(CASE WHEN EVENT_TYPE = 'SUCCESS' AND ADD_JOURNEY = 'LINK' THEN 1 END) AS LINK_SUCCESSFUL
+        ,COUNT(CASE WHEN EVENT_TYPE = 'DELETE' AND ADD_JOURNEY = 'LINK' THEN 1 END) AS LINK_DELETE
     FROM
         select_filter_columns
     GROUP BY 
