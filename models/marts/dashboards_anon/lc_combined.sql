@@ -13,12 +13,14 @@ WITH lc_joins_links AS (
         DATE
         ,BRAND
         ,LOYALTY_PLAN_NAME
+        ,LOYALTY_PLAN_COMPANY
     FROM lc_joins_links
     UNION
     SELECT DISTINCT
         DATE
         ,BRAND
         ,LOYALTY_PLAN_NAME
+        ,LOYALTY_PLAN_COMPANY
     FROM lc_joins_links_snapshot
 )
 
@@ -27,6 +29,7 @@ WITH lc_joins_links AS (
         b.DATE
         ,b.BRAND
         ,b.LOYALTY_PLAN_NAME
+        ,b.LOYALTY_PLAN_COMPANY
 
         ,COALESCE(jl.LINK_REQUEST_PENDING, 0) AS REQUESTED_LINKS
         ,COALESCE(jl.LINK_FAILED, 0) AS FAILED_LINKS

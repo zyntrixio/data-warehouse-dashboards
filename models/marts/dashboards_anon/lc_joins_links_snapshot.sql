@@ -55,6 +55,7 @@ WITH mock_brands AS (
         lc.*
         ,b.BRAND
         ,dlc.LOYALTY_PLAN_NAME
+        ,dlc.LOYALTY_PLAN_COMPANY
     FROM union_joins_links lc
     LEFT JOIN mock_brands b
         ON lc.USER_ID = b.USER_ID
@@ -97,6 +98,7 @@ WITH mock_brands AS (
         ,DATEADD(day, -1, DATE(VALID_TO)) AS END_DATE
         ,BRAND
         ,LOYALTY_PLAN_NAME
+        ,LOYALTY_PLAN_COMPANY
     FROM day_ends
 )
 
@@ -105,6 +107,7 @@ WITH mock_brands AS (
         d.DATE
         ,lc.BRAND
         ,lc.LOYALTY_PLAN_NAME
+        ,lc.LOYALTY_PLAN_COMPANY
         ,COALESCE(SUM(CASE WHEN EVENT_TYPE = 'SUCCESS' AND ADD_JOURNEY = 'JOIN' THEN 1 END),0) AS JOIN_SUCCESS_STATE
         ,COALESCE(SUM(CASE WHEN EVENT_TYPE = 'FAILED' AND ADD_JOURNEY = 'JOIN' THEN 1 END),0) AS JOIN_FAILED_STATE
         ,COALESCE(SUM(CASE WHEN EVENT_TYPE = 'REQUEST' AND ADD_JOURNEY = 'JOIN' THEN 1 END),0) AS JOIN_PENDING_STATE
@@ -121,6 +124,7 @@ WITH mock_brands AS (
         d.DATE
         ,lc.BRAND
         ,lc.LOYALTY_PLAN_NAME
+        ,lc.LOYALTY_PLAN_COMPANY
     HAVING
         DATE IS NOT NULL
         AND LOYALTY_PLAN_NAME IS NOT NULL
