@@ -99,8 +99,10 @@ WITH mock_brands AS (
         ,lc.STATUS_DESCRIPTION
         ,lc.STATUS_GROUP
         ,lc.STATUS_ROLLUP
+        ,lc.USER_ID
         ,b.BRAND
         ,dlc.LOYALTY_PLAN_NAME
+        ,dlc.LOYALTY_PLAN_COMPANY
         ,lc.REPEATED_STATUS
         ,lc.TO_RESOLVED
         ,lc.IS_RESOLVED
