@@ -102,6 +102,7 @@ WITH mock_brands AS (
         ,lc.USER_ID
         ,b.BRAND
         ,dlc.LOYALTY_PLAN_NAME
+        ,dlc.LOYALTY_PLAN_COMPANY
         ,lc.REPEATED_STATUS
         ,lc.TO_RESOLVED
         ,lc.IS_RESOLVED
