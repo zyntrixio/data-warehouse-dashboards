@@ -117,6 +117,7 @@ WITH mock_brands AS (
         ,STATUS_ROLLUP
         ,USER_ID
         ,BRAND
+        ,LOYALTY_CARD_ID
         ,LOYALTY_PLAN_NAME
         ,LOYALTY_PLAN_COMPANY
         ,REPEATED_STATUS
