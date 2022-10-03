@@ -3,6 +3,11 @@ WITH users AS (
     FROM {{ref('src__fact_user')}}
 )
 
+,brands AS (
+    SELECT *
+    FROM {{ref('trans__mock_brands')}}
+)
+
 ,wallet_refreshes AS (
     SELECT
         USER_ID
@@ -74,5 +79,15 @@ WITH users AS (
     SELECT * FROM transactions_join
 )
 
+,add_brand AS (
+    SELECT
+        u.*
+        ,b.BRAND
+    FROM
+        all_together u
+    LEFT JOIN
+        brands b ON u.USER_ID = b.USER_ID
+)
+
 SELECT *
-FROM all_together
+FROM add_brand
