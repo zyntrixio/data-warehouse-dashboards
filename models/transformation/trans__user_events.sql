@@ -22,6 +22,17 @@ WITH users AS (
     FROM {{ref('src__fact_transaction')}}
 )
 
+,lc_add AS (
+    SELECT *
+    FROM {{ref('src__fact_lc_add')}}
+    WHERE EVENT_TYPE = 'SUCCESS'
+)
+
+,lc_remove AS (
+    SELECT *
+    FROM {{ref('src__fact_lc_removed')}}
+)
+
 ,dim_lc AS (
     SELECT *
     FROM {{ref('src__dim_loyalty_card')}}
@@ -69,6 +80,28 @@ WITH users AS (
         ON t.LOYALTY_CARD_ID = dlc.LOYALTY_CARD_ID
 )
 
+,lc_register_events AS (
+    SELECT
+        lc.USER_ID
+        ,lc.EVENT_DATE_TIME
+        ,'LC_REGISTER' AS EVENT
+        ,dlc.LOYALTY_PLAN_NAME
+    FROM lc_add lc
+    LEFT JOIN dim_lc dlc
+        ON lc.LOYALTY_CARD_ID = dlc.LOYALTY_CARD_ID
+)
+
+,lc_remove_events AS (
+    SELECT
+        lc.USER_ID
+        ,lc.EVENT_DATE_TIME
+        ,'LC_REMOVE' AS EVENT
+        ,dlc.LOYALTY_PLAN_NAME
+    FROM lc_remove lc
+    LEFT JOIN dim_lc dlc
+        ON lc.LOYALTY_CARD_ID = dlc.LOYALTY_CARD_ID
+)
+
 ,all_together AS (
     SELECT * FROM creates
     UNION ALL
@@ -77,6 +110,10 @@ WITH users AS (
     SELECT * FROM wallet_refreshes
     UNION ALL
     SELECT * FROM transactions_join
+    UNION ALL
+    SELECT * FROM lc_register_events
+    UNION ALL
+    SELECT * FROM lc_remove_events
 )
 
 ,add_brand AS (
@@ -89,7 +126,7 @@ WITH users AS (
         brands b ON u.USER_ID = b.USER_ID
 )
 
-,refresh_each_lp AS (
+,refresh_each_lp AS ( -- Add a refresh event for each registered LC plan
     SELECT
         u.USER_ID
         ,u.EVENT_DATE_TIME
@@ -102,7 +139,7 @@ WITH users AS (
         add_brand u2 ON
         u.USER_ID = u2.USER_ID
         AND u.EVENT = 'REFRESH'  
-        AND u2.EVENT = 'TRANSACT'
+        AND u2.EVENT = 'LC_REGISTER'
         AND u2.EVENT_DATE_TIME < u.EVENT_DATE_TIME
 )
 
