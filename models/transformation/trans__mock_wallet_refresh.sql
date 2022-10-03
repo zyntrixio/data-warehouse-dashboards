@@ -1,3 +1,7 @@
+{{config(
+    materialized="table"
+)}}
+
 WITH users AS (
 SELECT * FROM {{ref('src__fact_user')}}
 )
