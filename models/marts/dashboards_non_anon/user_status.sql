@@ -89,7 +89,7 @@ WITH user_events AS (
     WHERE EVENT_DATE <= CURRENT_DATE()
 )
 
-,day_ends AS ( -- just get events that finish the day
+,day_ends AS ( -- just get events that finish the day. TWEAK TO INCLUDE MOST DOMINANT EVENT
     SELECT
         *
         ,MAX(EVENT_DATE_TIME) OVER (PARTITION BY USER_ID, EVENT_DATE) AS LAST_EVENT_DAILY
