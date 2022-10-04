@@ -2,14 +2,13 @@ WITH user_events AS (
     SELECT *
     FROM {{ref('trans__user_events')}}
     WHERE EVENT NOT IN ('CREATE', 'DELETE')
+    AND LOYALTY_PLAN IS NOT NULL
+    AND BRAND IS NOT NULL
 )
 
 ,add_history_columns AS ( -- Calculate previous and following refresh and transaction times
     SELECT
         *
-        ,EVENT_DATE_TIME::DATE - MAX(CASE WHEN EVENT = 'REFRESH' THEN EVENT_DATE_TIME END)
-            OVER (PARTITION BY USER_ID ORDER BY EVENT_DATE_TIME ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW)::DATE
-            AS DAYS_SINCE_LAST_REFRESH_EVENT
         ,EVENT_DATE_TIME::DATE - MAX(CASE WHEN EVENT = 'TRANSACT' THEN EVENT_DATE_TIME END)
             OVER (PARTITION BY USER_ID, LOYALTY_PLAN ORDER BY EVENT_DATE_TIME ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW)::DATE
             AS DAYS_SINCE_LAST_TRANSACT_EVENT
@@ -30,7 +29,6 @@ WITH user_events AS (
         ,'STATUS_CHANGE_INACTIVE' AS EVENT
         ,LOYALTY_PLAN
         ,BRAND
-        ,NULL AS DAYS_SINCE_LAST_REFRESH_EVENT
         ,NULL AS DAYS_SINCE_LAST_TRANSACT_EVENT
         ,NULL AS NEXT_REFRESH_EVENT
         ,NULL AS NEXT_TRANSACT_EVENT
@@ -48,7 +46,6 @@ WITH user_events AS (
         ,'STATUS_CHANGE_DORMANT' AS EVENT
         ,LOYALTY_PLAN
         ,BRAND
-        ,NULL AS DAYS_SINCE_LAST_REFRESH_EVENT
         ,NULL AS DAYS_SINCE_LAST_TRANSACT_EVENT
         ,NULL AS NEXT_REFRESH_EVENT
         ,NULL AS NEXT_TRANSACT_EVENT
@@ -67,10 +64,11 @@ WITH user_events AS (
     SELECT * FROM dormant_events
 )
 
-,calculate_statuses AS ( -- Calculate status for each event. May have status duplication
+,calculate_statuses AS ( -- Calculate status for each event. May have status duplication. Also removes hypothetical future events
     SELECT
         USER_ID
         ,EVENT_DATE_TIME
+        ,EVENT_DATE_TIME::DATE AS EVENT_DATE
         ,EVENT
         ,LOYALTY_PLAN
         ,BRAND
@@ -88,12 +86,47 @@ WITH user_events AS (
             WHEN EVENT = 'REFRESH' AND COALESCE(DAYS_SINCE_LAST_TRANSACT_EVENT,31) <= 30
             THEN 'ACTIVE'
             END AS STATUS
-        -- ,DAYS_SINCE_LAST_REFRESH_EVENT
-        -- ,DAYS_SINCE_LAST_TRANSACT_EVENT
-        -- ,NEXT_REFRESH_EVENT
-        -- ,NEXT_TRANSACT_EVENT
     FROM add_status_change_events
+    WHERE EVENT_DATE <= CURRENT_DATE()
+)
+
+,day_ends AS ( -- just get events that finish the day
+    SELECT
+        *
+        ,MAX(EVENT_DATE_TIME) OVER (PARTITION BY USER_ID, LOYALTY_PLAN, EVENT_DATE) AS LAST_EVENT_DAILY
+    FROM calculate_statuses
+    QUALIFY
+        EVENT_DATE_TIME = LAST_EVENT_DAILY
+)
+
+,select_status_changes AS ( -- just get events for which there is a status change
+    SELECT
+        USER_ID
+        ,EVENT_DATE
+        ,LOYALTY_PLAN
+        ,BRAND
+        ,STATUS
+        ,LAG(STATUS) OVER (PARTITION BY USER_ID, LOYALTY_PLAN ORDER BY EVENT_DATE_TIME) AS PREVIOUS_STATUS
+    FROM
+        day_ends
+    QUALIFY
+        STATUS != PREVIOUS_STATUS
+        OR PREVIOUS_STATUS IS NULL
+)
+
+,calculate_status_times AS (
+    SELECT
+        USER_ID
+        ,EVENT_DATE
+        ,LOYALTY_PLAN
+        ,BRAND
+        ,STATUS AS CURRENT_STATUS
+        ,COALESCE(LEAD(EVENT_DATE) OVER (PARTITION BY USER_ID, LOYALTY_PLAN ORDER BY EVENT_DATE), CURRENT_DATE()) - EVENT_DATE AS TIME_IN_CURRENT_STATUS
+        ,PREVIOUS_STATUS
+        ,EVENT_DATE - LAG(EVENT_DATE) OVER (PARTITION BY USER_ID, LOYALTY_PLAN ORDER BY EVENT_DATE) AS TIME_IN_PREVIOUS_STATUS
+    FROM
+        select_status_changes
 )
 
 SELECT *
-FROM calculate_statuses
+FROM calculate_status_times
