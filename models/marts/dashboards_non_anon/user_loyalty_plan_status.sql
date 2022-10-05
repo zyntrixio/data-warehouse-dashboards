@@ -39,6 +39,7 @@ WITH user_events AS (
     WHERE
         COALESCE(NEXT_REFRESH_EVENT,31) <= 30
         AND COALESCE(NEXT_TRANSACT_EVENT,31) > 30
+        AND EVENT != 'LC_REMOVE'
 )
 
 ,dormant_events AS ( -- occurs when it's been 30 days since a transaction or refresh
@@ -57,6 +58,7 @@ WITH user_events AS (
     WHERE
         COALESCE(NEXT_REFRESH_EVENT,31) > 30
         AND COALESCE(NEXT_TRANSACT_EVENT,31) > 30
+        AND EVENT != 'LC_REMOVE'
 )
 
 ,add_status_change_events AS ( -- Union in status change events
@@ -89,6 +91,8 @@ WITH user_events AS (
             THEN 'INACTIVE'
             WHEN EVENT = 'REFRESH' AND COALESCE(DAYS_SINCE_LAST_TRANSACT_EVENT,31) <= 30
             THEN 'ACTIVE'
+            WHEN EVENT = 'LC_REMOVE'
+            THEN 'REMOVED'
             END AS STATUS
     FROM add_status_change_events
     WHERE STATUS_FROM_DATE <= CURRENT_DATE()
