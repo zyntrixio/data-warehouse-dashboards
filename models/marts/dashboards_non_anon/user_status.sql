@@ -1,11 +1,10 @@
 WITH user_events AS (
     SELECT *
     FROM {{ref('trans__user_events')}}
-    WHERE LOYALTY_PLAN IS NOT NULL
-    AND BRAND IS NOT NULL
+    WHERE BRAND IS NOT NULL
 )
 
-,add_history_columns AS (
+,add_history_columns AS ( -- Calculate previous and following refresh and transaction times
     SELECT
         USER_ID
         ,EVENT_DATE_TIME
@@ -38,6 +37,7 @@ WITH user_events AS (
     WHERE
         COALESCE(NEXT_REFRESH_EVENT,31) <= 30
         AND COALESCE(NEXT_TRANSACT_EVENT,31) > 30
+        AND EVENT != 'DELETE'
 )
 
 ,dormant_events AS ( -- occurs when it's been 30 days since a transaction or refresh
@@ -54,6 +54,7 @@ WITH user_events AS (
     WHERE
         COALESCE(NEXT_REFRESH_EVENT,31) > 30
         AND COALESCE(NEXT_TRANSACT_EVENT,31) > 30
+        AND EVENT != 'DELETE'
 )
 
 ,add_status_change_events AS ( -- Union in status change events
@@ -68,7 +69,7 @@ WITH user_events AS (
     SELECT
         USER_ID
         ,EVENT_DATE_TIME
-        ,EVENT_DATE_TIME::DATE AS EVENT_DATE
+        ,EVENT_DATE_TIME::DATE AS STATUS_FROM_DATE
         ,EVENT
         ,BRAND
         ,CASE
@@ -78,33 +79,37 @@ WITH user_events AS (
             THEN 'INACTIVE'
             WHEN EVENT = 'TRANSACT'
             THEN 'ACTIVE'
-            WHEN EVENT = 'LC_REGISTER'
+            WHEN EVENT = 'CREATE'
             THEN 'REGISTRATION'
             WHEN EVENT = 'REFRESH' AND COALESCE(DAYS_SINCE_LAST_TRANSACT_EVENT,31) > 30
             THEN 'INACTIVE'
             WHEN EVENT = 'REFRESH' AND COALESCE(DAYS_SINCE_LAST_TRANSACT_EVENT,31) <= 30
             THEN 'ACTIVE'
+            WHEN EVENT = 'DELETE'
+            THEN 'REMOVED'
             END AS STATUS
     FROM add_status_change_events
-    WHERE EVENT_DATE <= CURRENT_DATE()
+    WHERE STATUS_FROM_DATE <= CURRENT_DATE()
 )
 
-,day_ends AS ( -- just get events that finish the day. TWEAK TO INCLUDE MOST DOMINANT EVENT
+,day_ends AS ( -- just get events that finish the day
     SELECT
         *
-        ,MAX(EVENT_DATE_TIME) OVER (PARTITION BY USER_ID, EVENT_DATE) AS LAST_EVENT_DAILY
+        ,MAX(EVENT_DATE_TIME) OVER (PARTITION BY USER_ID, STATUS_FROM_DATE) AS LAST_EVENT_DAILY
     FROM calculate_statuses
     QUALIFY
         EVENT_DATE_TIME = LAST_EVENT_DAILY
 )
 
-,select_status_changes AS ( -- just get events for which there is a status change
+,select_status_changes AS ( -- Just get events for which there is a status change. Calculate Registration date
     SELECT
         USER_ID
-        ,EVENT_DATE
+        ,STATUS_FROM_DATE
         ,BRAND
         ,STATUS
         ,LAG(STATUS) OVER (PARTITION BY USER_ID ORDER BY EVENT_DATE_TIME) AS PREVIOUS_STATUS
+        ,STATUS_FROM_DATE - MAX(CASE WHEN EVENT = 'CREATE' THEN EVENT_DATE_TIME END)
+            OVER (PARTITION BY USER_ID ORDER BY EVENT_DATE_TIME ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW)::DATE AS DAYS_SINCE_REGISTRATION
     FROM
         day_ends
     QUALIFY
@@ -115,12 +120,14 @@ WITH user_events AS (
 ,calculate_status_times AS (
     SELECT
         USER_ID
-        ,EVENT_DATE
+        ,STATUS_FROM_DATE
+        ,LEAD(STATUS_FROM_DATE) OVER (PARTITION BY USER_ID ORDER BY STATUS_FROM_DATE) AS STATUS_TO_DATE
         ,BRAND
         ,STATUS AS CURRENT_STATUS
-        ,COALESCE(LEAD(EVENT_DATE) OVER (PARTITION BY USER_ID ORDER BY EVENT_DATE), CURRENT_DATE()) - EVENT_DATE AS DAYS_IN_CURRENT_STATUS
+        ,COALESCE(LEAD(STATUS_FROM_DATE) OVER (PARTITION BY USER_ID ORDER BY STATUS_FROM_DATE), CURRENT_DATE()) - STATUS_FROM_DATE AS DAYS_IN_CURRENT_STATUS
         ,PREVIOUS_STATUS
-        ,EVENT_DATE - LAG(EVENT_DATE) OVER (PARTITION BY USER_ID ORDER BY EVENT_DATE) AS DAYS_IN_PREVIOUS_STATUS
+        ,STATUS_FROM_DATE - LAG(STATUS_FROM_DATE) OVER (PARTITION BY USER_ID ORDER BY STATUS_FROM_DATE) AS DAYS_IN_PREVIOUS_STATUS
+        ,DAYS_SINCE_REGISTRATION
     FROM
         select_status_changes
 )
