@@ -1,7 +1,8 @@
 WITH user_events AS (
     SELECT *
     FROM {{ref('trans__user_events')}}
-    WHERE BRAND IS NOT NULL
+    WHERE EVENT NOT IN ('LC_REGISTER', 'LC_REMOVE')
+    AND BRAND IS NOT NULL
 )
 
 ,add_history_columns AS ( -- Calculate previous and following refresh and transaction times
