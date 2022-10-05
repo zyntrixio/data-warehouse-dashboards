@@ -19,6 +19,7 @@ WITH source AS (
         ,INSERTED_DATE_TIME
         ,UPDATED_DATE_TIME
     FROM source
+    WHERE USER_ID IN (SELECT USER_ID FROM {{ref('src__fact_user')}}) -- required for creating consistent data sources
 )
 
 SELECT *
