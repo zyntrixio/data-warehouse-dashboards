@@ -14,6 +14,7 @@ WITH users AS (
         ,EVENT_DATE_TIME
         ,'REFRESH' AS EVENT
         ,NULL AS LOYALTY_PLAN_NAME
+        ,NULL AS LOYALTY_PLAN_COMPANY
     FROM {{ref('trans__mock_wallet_refresh')}}
 )
 
@@ -56,6 +57,7 @@ WITH users AS (
         ,EVENT_DATE_TIME
         ,'CREATE' AS EVENT
         ,NULL AS LOYALTY_PLAN_NAME
+        ,NULL AS LOYALTY_PLAN_COMPANY
     FROM create_delete
 )
 
@@ -65,6 +67,7 @@ WITH users AS (
         ,DELETE_DT AS EVENT_DATE_TIME
         ,'DELETE' AS EVENT
         ,NULL AS LOYALTY_PLAN_NAME
+        ,NULL AS LOYALTY_PLAN_COMPANY
     FROM create_delete
     WHERE NEXT_EVENT = 'DELETED'
 )
@@ -75,6 +78,7 @@ WITH users AS (
         ,t.EVENT_DATE_TIME
         ,'TRANSACT' AS EVENT
         ,dlc.LOYALTY_PLAN_NAME
+        ,dlc.LOYALTY_PLAN_COMPANY
     FROM transactions t
     LEFT JOIN dim_lc dlc
         ON t.LOYALTY_CARD_ID = dlc.LOYALTY_CARD_ID
@@ -86,6 +90,7 @@ WITH users AS (
         ,lc.EVENT_DATE_TIME
         ,'LC_REGISTER' AS EVENT
         ,dlc.LOYALTY_PLAN_NAME
+        ,dlc.LOYALTY_PLAN_COMPANY
     FROM lc_add lc
     LEFT JOIN dim_lc dlc
         ON lc.LOYALTY_CARD_ID = dlc.LOYALTY_CARD_ID
@@ -97,6 +102,7 @@ WITH users AS (
         ,lc.EVENT_DATE_TIME
         ,'LC_REMOVE' AS EVENT
         ,dlc.LOYALTY_PLAN_NAME
+        ,dlc.LOYALTY_PLAN_COMPANY
     FROM lc_remove lc
     LEFT JOIN dim_lc dlc
         ON lc.LOYALTY_CARD_ID = dlc.LOYALTY_CARD_ID
@@ -132,6 +138,7 @@ WITH users AS (
         ,u.EVENT_DATE_TIME
         ,u.EVENT
         ,COALESCE(u.LOYALTY_PLAN_NAME, u2.LOYALTY_PLAN_NAME) AS LOYALTY_PLAN
+        ,COALESCE(u.LOYALTY_PLAN_COMPANY, u2.LOYALTY_PLAN_COMPANY) AS LOYALTY_PLAN_COMPANY
         ,u.BRAND
     FROM
         add_brand u
@@ -142,19 +149,6 @@ WITH users AS (
         AND u2.EVENT = 'LC_REGISTER'
         AND u2.EVENT_DATE_TIME < u.EVENT_DATE_TIME
 )
-
--- ,add_history_columns AS (
---     SELECT
---         *
---         ,MAX(CASE WHEN EVENT = 'REFRESH' THEN EVENT_DATE_TIME END)
---             OVER (PARTITION BY USER_ID ORDER BY EVENT_DATE_TIME ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW) AS LAST_REFRESH_EVENT
---         ,MAX(CASE WHEN EVENT = 'TRANSACT' THEN EVENT_DATE_TIME END)
---             OVER (PARTITION BY USER_ID ORDER BY EVENT_DATE_TIME ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW) AS LAST_TRANSACT_EVENT
---         ,MIN(CASE WHEN EVENT = 'TRANSACT' THEN EVENT_DATE_TIME END)
---             OVER (PARTITION BY USER_ID ORDER BY EVENT_DATE_TIME ROWS BETWEEN 1 FOLLOWING AND UNBOUNDED FOLLOWING) AS NEXT_TRANSACT_EVENT
---     FROM
---         refresh_each_lp
--- )
 
 SELECT *
 FROM refresh_each_lp
