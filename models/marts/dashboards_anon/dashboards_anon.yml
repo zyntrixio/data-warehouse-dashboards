@@ -126,3 +126,27 @@ models:
 
       - name: TOTAL_LC_USERS_COUNT
         description: Total LC (Rolling count) per day, brand, and loyalty plan
+
+  - name: user_loyalty_plan_status_snapshot
+    description: Status counts per day on user & loyalty-plan granularity
+    columns:
+      - name: DATE
+        description: All dates with LC changes
+
+      - name: BRAND
+        description: HSBC / LLOYDS etc
+
+      - name: LOYALTY_PLAN
+        description: Wasabi club etc
+
+      - name: LOYALTY_PLAN_COMPANY
+        description: Wasabi etc
+
+      - name: ACTIVE_STATE
+        description: Number of users in loyalty plan in active state
+
+      - name: INACTIVE_STATE
+        description: Number of users in loyalty plan in inactive state
+
+      - name: DORMANT_STATE
+        description: Number of users in loyalty plan in dormant state

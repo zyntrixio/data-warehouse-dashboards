@@ -1,7 +1,5 @@
 version: 2
 
-# One yml file per source called "scr_[source].yml"
-
 sources:
   - name: BINK
     description: Data for DBT template
