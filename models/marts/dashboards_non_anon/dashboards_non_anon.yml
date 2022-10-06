@@ -36,7 +36,7 @@ models:
 
       - name: LOYALTY_CARD_CREATED
 
-  - name: user_status_loyalty_plan
+  - name: user_loyalty_plan_status
     description: User status changes. On a per user per loyalty plan granularity
     columns:
       - name: USER_ID
