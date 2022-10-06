@@ -1,6 +1,7 @@
 WITH source AS (
     SELECT * 
     FROM {{ source('BINK', 'FACT_USER') }}
+    WHERE EVENT_TYPE iS NOT NULL
 )
 
 ,renamed AS (

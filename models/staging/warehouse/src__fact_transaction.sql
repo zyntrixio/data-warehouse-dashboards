@@ -1,21 +1,24 @@
 WITH source AS (
     SELECT * 
-    FROM {{ source('BINK', 'FACT_LOYALTY_CARD_ADD') }}
+    FROM {{ source('BINK', 'FACT_TRANSACTION') }}
 )
 
 ,renamed AS (
     SELECT
         EVENT_ID
         ,EVENT_DATE_TIME
-        ,AUTH_TYPE
-        ,EVENT_TYPE
-        ,LOYALTY_CARD_ID
-        ,LOYALTY_PLAN
-        ,IS_MOST_RECENT
-        ,CHANNEL
-        ,ORIGIN
         ,USER_ID
-        ,EMAIL_DOMAIN
+        ,TRANSACTION_ID
+        ,PROVIDER_SLUG
+        ,LOYALTY_PLAN_NAME
+        ,TRANSACTION_DATE
+        ,SPEND_AMOUNT
+        ,SPEND_CURRENCY
+        ,LOYALTY_ID
+        ,LOYALTY_CARD_ID
+        ,MERCHANT_ID
+        ,PAYMENT_ACCOUNT_ID
+        ,SETTLEMENT_KEY
         ,INSERTED_DATE_TIME
         ,UPDATED_DATE_TIME
     FROM source

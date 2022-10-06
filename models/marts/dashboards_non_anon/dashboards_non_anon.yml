@@ -1,11 +1,103 @@
 version: 2
 
-# This is a key file for:
-#   - documenting the output fields
-#   - applying final post-transform tests
-
 models:
-  
-
 
   - name: voucher
+    columns:
+      - name: LOYALTY_CARD_ID
+
+      - name: USER_ID
+
+      - name: CHANNEL
+
+      - name: STATE
+
+      - name: EARN_TYPE
+
+      - name: VOUCHER_CODE
+
+      - name: REDEMPTION_TRACKED
+
+      - name: DATE_REDEEMED
+
+      - name: DATE_ISSUED
+
+      - name: EXPIRY_DATE
+
+      - name: TIME_TO_REDEMPTION
+
+      - name: DAYS_VALID_FOR
+
+      - name: DAYS_LEFT_ON_VOUCHERS
+
+      - name: LOYALTY_PLAN_COMPANY
+
+      - name: LOYALTY_PLAN_NAME
+
+      - name: LOYALTY_CARD_CREATED
+
+  - name: user_loyalty_plan_status
+    description: User status changes. On a per user per loyalty plan granularity
+    columns:
+      - name: USER_ID
+        description: User Identifier
+
+      - name: STATUS_FROM_DATE
+        description: Start date of current status
+
+      - name: STATUS_TO_DATE
+        description: End date of current status
+
+      - name: LOYALTY_PLAN
+        description: Wasabi club etc
+
+      - name: LOYALTY_PLAN_COMPANY
+        description: Wasabi etc
+
+      - name: BRAND
+        description: HSBC / LLOYDS etc
+
+      - name: CURRENT_STATUS
+        description: The status per user per loyalty plan per date
+
+      - name: DAYS_IN_CURRENT_STATUS
+        description: How long has the user in a loyalty plan has been in a given status
+
+      - name: PREVIOUS_STATUS
+        description: Previous status
+
+      - name: DAYS_IN_PREVIOUS_STATUS
+        description: Previous days_in_status
+
+      - name: DAYS_SINCE_REGISTRATION
+        description: How long since thew most recent registration event
+
+  - name: user_status
+    description: User status changes. On a per user granularity
+    columns:
+      - name: USER_ID
+        description: User Identifier
+
+      - name: STATUS_FROM_DATE
+        description: Start date of current status
+
+      - name: STATUS_TO_DATE
+        description: End date of current status
+
+      - name: BRAND
+        description: HSBC / LLOYDS etc
+
+      - name: CURRENT_STATUS
+        description: The status per user per date
+
+      - name: DAYS_IN_CURRENT_STATUS
+        description: How long has the user has been in a given status
+
+      - name: PREVIOUS_STATUS
+        description: Previous status
+
+      - name: DAYS_IN_PREVIOUS_STATUS
+        description: Previous days_in_status
+
+      - name: DAYS_SINCE_REGISTRATION
+        description: How long since thew most recent registration event

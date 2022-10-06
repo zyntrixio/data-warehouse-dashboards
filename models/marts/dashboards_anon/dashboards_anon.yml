@@ -1,10 +1,19 @@
 version: 2
 
 models:
-  - name: lc_create_events
+  - name: errors
     columns:
-      - name: DATE
-        description: All dates with LC additions
+      - name: STATUS_ID
+        description: Error 
+
+      - name: STATUS_DESCRIPTION
+        description: Description of errror
+
+      - name: STATUS_GROUP
+        description: User error / system error
+
+      - name: STATUS_ROLLUP
+        description: Summary of error
 
       - name: BRAND
         description: HSBC / LLOYDS etc
@@ -12,13 +21,25 @@ models:
       - name: LOYALTY_PLAN_NAME
         description: Wasabi club etc
 
-      - name: NEW_LOYALTY_LINKS
-        description: New LC added wallet through auth & add_auth
+      - name: REPEATED_STATUS
+        description: Is error immediately repeated
 
-      - name: NEW_LOYALTY_JOINS
-        description: New LC added wallet through join & register
+      - name: TO_RESOLVED
+        description: Is error immediately resolved to a succesful state
 
-  - name: lc_joins_snapshot
+      - name: IS_RESOLVED
+        description: Is error eventually resolved to a succesful state
+
+      - name: IS_FINAL_STATE
+        description: Is final status
+
+      - name: STATUS_START_TIME
+        description: Error event time
+
+      - name: STATUS_END_TIME
+        description: Time of next status
+
+  - name: lc_joins_links_snapshot
     description: On any given day, how many Joined LCs are in a particular state
     columns:
       - name: DATE
@@ -30,19 +51,31 @@ models:
       - name: LOYALTY_PLAN_NAME
         description: Wasabi club etc
 
-      - name: SUCCESS_STATE
-        description: Number of LCs in success state
+      - name: JOIN_SUCCESS_STATE
+        description: Number of LCs in success state from JOIN route
 
-      - name: FAILED_STATE
-        description: Number of LCs in failed state
+      - name: JOIN_FAILED_STATE
+        description: Number of LCs in failed state from JOIN route
 
-      - name: REQUEST_STATE
-        description: Number of LCs in request state
+      - name: JOIN_PENDING_STATE
+        description: Number of LCs in request state from JOIN route
 
-      - name: REMOVED_STATE
-        description: Number of LCs in removed state
+      - name: JOIN_REMOVED_STATE
+        description: Number of LCs in removed state from JOIN route
 
-  - name: lc_joins
+      - name: LINK_SUCCESS_STATE
+        description: Number of LCs in success state from LINK route
+
+      - name: LINK_FAILED_STATE
+        description: Number of LCs in failed state from LINK route
+
+      - name: LINK_PENDING_STATE
+        description: Number of LCs in request state from LINK route
+
+      - name: LINK_REMOVED_STATE
+        description: Number of LCs in removed state from LINK route
+
+  - name: lc_joins_links
     columns:
       - name: DATE
         description: All dates with LC changes
@@ -53,82 +86,23 @@ models:
       - name: LOYALTY_PLAN_NAME
         description: Wasabi club etc
 
-      - name: REQUESTED_JOINS
-        description: Number of LC join request events
+      - name: JOIN_REQUEST_PENDING
+        description: Number of LC JOIN pending events
 
-      - name: FAILED_JOINS
-        description: Number of LC join failed events
+      - name: JOIN_FAILED
+        description: Number of LC JOIN failed events
 
-      - name: SUCCESSFUL_JOINS
-        description: Number of LC join success events
+      - name: JOIN_SUCCESSFUL
+        description: Number of LC JOIN success events
 
-  - name: lc_links_snapshot
-    description: On any given day, how many Linked LCs are in a particular state
-    columns:
-      - name: DATE
-        description: All dates
+      - name: LINK_REQUEST_PENDING
+        description: Number of LC LINK pending events
 
-      - name: BRAND
-        description: HSBC / LLOYDS etc
+      - name: LINK_FAILED
+        description: Number of LC LINK failed events
 
-      - name: LOYALTY_PLAN_NAME
-        description: Wasabi club etc
-
-      - name: SUCCESS_STATE
-        description: Number of LCs in success state
-
-      - name: FAILED_STATE
-        description: Number of LCs in failed state
-
-      - name: REQUEST_STATE
-        description: Number of LCs in request state
-
-      - name: REMOVED_STATE
-        description: Number of LCs in removed state
-
-  - name: lc_links
-    columns:
-      - name: DATE
-        description: All dates with LC changes
-
-      - name: BRAND
-        description: HSBC / LLOYDS etc
-
-      - name: LOYALTY_PLAN_NAME
-        description: Wasabi club etc
-
-      - name: PENDING_JOINS
-        description: Number of LC join pending events
-
-      - name: FAILED_JOINS
-        description: Number of LC join failed events
-
-      - name: SUCCESSFUL_JOINS
-        description: Number of LC join success events
-
-
-  - name: lc_registered_deleted
-    columns:
-      - name: DATE
-        description: All dates with LC changes
-
-      - name: BRAND
-        description: HSBC / LLOYDS etc
-
-      - name: LOYALTY_PLAN_NAME
-        description: Wasabi club etc
-
-      - name: LC_CREATED
-        description: Number of LC created per day, brand, and loyalty plan
-
-      - name: LC_DELETED
-        description: Number of LC deleted per day, brand, and loyalty plan
-
-      - name: DAILY_CHANGE_IN_LC
-        description: LC Created - Deleted
-
-      - name: TOTAL_LC_COUNT
-        description: Total LC (Rolling count) per day, brand, and loyalty plan
+      - name: LINK_SUCCESSFUL
+        description: Number of LC LINK success events
 
   - name: user_with_lc
     columns:
@@ -152,3 +126,27 @@ models:
 
       - name: TOTAL_LC_USERS_COUNT
         description: Total LC (Rolling count) per day, brand, and loyalty plan
+
+  - name: user_loyalty_plan_status_snapshot
+    description: Status counts per day on user & loyalty-plan granularity
+    columns:
+      - name: DATE
+        description: All dates with LC changes
+
+      - name: BRAND
+        description: HSBC / LLOYDS etc
+
+      - name: LOYALTY_PLAN
+        description: Wasabi club etc
+
+      - name: LOYALTY_PLAN_COMPANY
+        description: Wasabi etc
+
+      - name: ACTIVE_STATE
+        description: Number of users in loyalty plan in active state
+
+      - name: INACTIVE_STATE
+        description: Number of users in loyalty plan in inactive state
+
+      - name: DORMANT_STATE
+        description: Number of users in loyalty plan in dormant state

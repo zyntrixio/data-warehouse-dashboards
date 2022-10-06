@@ -14,14 +14,4 @@ models:
     config:
       tags:
         - daily  
-
-  - name: trans__lc_join
-    config:
-      tags:
-        - daily  
-
-  - name: trans__lc_registered
-    config:
-      tags:
-        - daily  
-        
+      
