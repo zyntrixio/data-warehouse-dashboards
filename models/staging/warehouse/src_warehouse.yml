@@ -1,7 +1,5 @@
 version: 2
 
-# One yml file per source called "scr_[source].yml"
-
 sources:
   - name: BINK
     description: Data for DBT template
@@ -44,6 +42,9 @@ sources:
 
       - name: FACT_USER
         description:  User create / delete fact table
+
+      - name: FACT_TRANSACTION
+        description:  Transaction events
       
       - name: DIM_LOYALTY_CARD_ACTIVE_SCD
         description: One row per LOYALTY card add per account includes removals.
