@@ -31,7 +31,8 @@ WITH user_statuses AS (
         AND
         (ACTIVE_STATE != 0
         OR INACTIVE_STATE != 0
-        OR DORMANT_STATE != 0)
+        OR DORMANT_STATE != 0
+        OR REGISTERED_USERS != 0)
 )
 
 SELECT *

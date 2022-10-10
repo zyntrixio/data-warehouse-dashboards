@@ -5,7 +5,7 @@ WITH user_statuses AS (
 
 ,count_up AS (
     SELECT
-        STATUS_FROM_DATE
+        STATUS_FROM_DATE AS DATE
         ,BRAND
         ,LOYALTY_PLAN
         ,LOYALTY_PLAN_COMPANY
@@ -13,12 +13,12 @@ WITH user_statuses AS (
         ,COALESCE(SUM(CASE WHEN CURRENT_STATUS = 'REMOVED' THEN 1 END),0) AS DAILY_DEREGISTRATIONS
     FROM user_statuses
     GROUP BY
-        STATUS_FROM_DATE
+        DATE
         ,BRAND
         ,LOYALTY_PLAN
         ,LOYALTY_PLAN_COMPANY
     HAVING
-        STATUS_FROM_DATE IS NOT NULL
+        DATE IS NOT NULL
         AND
         (DAILY_REGISTRATIONS != 0
         OR DAILY_DEREGISTRATIONS != 0)
