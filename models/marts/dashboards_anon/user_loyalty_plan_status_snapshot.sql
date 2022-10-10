@@ -1,6 +1,6 @@
 WITH user_statuses AS (
     SELECT *
-    FROM {{ref('user_loyalty_plan_status')}}
+    FROM {{ref('user_loyalty_plan_status_change')}}
 )
 
 ,dim_date AS (
