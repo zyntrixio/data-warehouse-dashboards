@@ -1,0 +1,28 @@
+WITH user_statuses AS (
+    SELECT *
+    FROM {{ref('user_loyalty_plan_status_change')}}
+)
+
+,count_up AS (
+    SELECT
+        STATUS_FROM_DATE AS DATE
+        ,BRAND
+        ,LOYALTY_PLAN
+        ,LOYALTY_PLAN_COMPANY
+        ,COALESCE(SUM(CASE WHEN CURRENT_STATUS = 'REGISTRATION' THEN 1 END),0) AS DAILY_REGISTRATIONS
+        ,COALESCE(SUM(CASE WHEN CURRENT_STATUS = 'REMOVED' THEN 1 END),0) AS DAILY_DEREGISTRATIONS
+    FROM user_statuses
+    GROUP BY
+        DATE
+        ,BRAND
+        ,LOYALTY_PLAN
+        ,LOYALTY_PLAN_COMPANY
+    HAVING
+        DATE IS NOT NULL
+        AND
+        (DAILY_REGISTRATIONS != 0
+        OR DAILY_DEREGISTRATIONS != 0)
+)
+
+SELECT *
+FROM count_up

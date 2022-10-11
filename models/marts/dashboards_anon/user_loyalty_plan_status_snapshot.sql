@@ -1,6 +1,6 @@
 WITH user_statuses AS (
     SELECT *
-    FROM {{ref('user_loyalty_plan_status')}}
+    FROM {{ref('user_loyalty_plan_status_change')}}
 )
 
 ,dim_date AS (
@@ -20,6 +20,7 @@ WITH user_statuses AS (
         ,COALESCE(SUM(CASE WHEN u.CURRENT_STATUS = 'ACTIVE' THEN 1 END),0) AS ACTIVE_STATE
         ,COALESCE(SUM(CASE WHEN u.CURRENT_STATUS = 'INACTIVE' OR u.CURRENT_STATUS = 'REGISTRATION' THEN 1 END),0) AS INACTIVE_STATE
         ,COALESCE(SUM(CASE WHEN u.CURRENT_STATUS = 'DORMANT' AND u.DAYS_SINCE_REGISTRATION >= 30 THEN 1 END),0) AS DORMANT_STATE
+        ,COALESCE(SUM(CASE WHEN u.CURRENT_STATUS IN ('REGISTRATION', 'ACTIVE', 'INACTIVE', 'DORMANT') THEN 1 END),0) AS REGISTERED_USERS
     FROM user_statuses u
     LEFT JOIN dim_date d
         ON d.DATE >= u.STATUS_FROM_DATE
@@ -34,7 +35,8 @@ WITH user_statuses AS (
         AND
         (ACTIVE_STATE != 0
         OR INACTIVE_STATE != 0
-        OR DORMANT_STATE != 0)
+        OR DORMANT_STATE != 0
+        OR REGISTERED_USERS != 0)
 )
 
 SELECT *

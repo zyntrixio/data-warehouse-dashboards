@@ -36,7 +36,7 @@ models:
 
       - name: LOYALTY_CARD_CREATED
 
-  - name: user_loyalty_plan_status
+  - name: user_loyalty_plan_status_change
     description: User status changes. On a per user per loyalty plan granularity
     columns:
       - name: USER_ID
@@ -72,7 +72,7 @@ models:
       - name: DAYS_SINCE_REGISTRATION
         description: How long since thew most recent registration event
 
-  - name: user_status
+  - name: user_status_change
     description: User status changes. On a per user granularity
     columns:
       - name: USER_ID
