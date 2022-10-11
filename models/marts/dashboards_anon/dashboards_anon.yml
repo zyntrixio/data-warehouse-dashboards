@@ -154,6 +154,9 @@ models:
       - name: REGISTERED_USERS
         description: Total number of users registered within the loyalty plan
 
+      - name: DEREGISTERED_USERS
+        description: Total number of users deregistered
+
   - name: user_loyalty_plan_status
     description: Registartions and deregistrations each day
     columns:
@@ -195,6 +198,9 @@ models:
 
       - name: REGISTERED_USERS
         description: Total number of users registered
+
+      - name: DEREGISTERED_USERS
+        description: Total number of users deregistered
 
   - name: user_status
     description: Registartions and deregistrations each day
