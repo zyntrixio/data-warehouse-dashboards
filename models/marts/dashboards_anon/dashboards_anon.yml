@@ -150,3 +150,63 @@ models:
 
       - name: DORMANT_STATE
         description: Number of users in loyalty plan in dormant state
+
+      - name: REGISTERED_USERS
+        description: Total number of users registered within the loyalty plan
+
+  - name: user_loyalty_plan_status
+    description: Registartions and deregistrations each day
+    columns:
+      - name: DATE
+        description: All dates with LC changes
+
+      - name: BRAND
+        description: HSBC / LLOYDS etc
+
+      - name: LOYALTY_PLAN
+        description: Wasabi club etc
+
+      - name: LOYALTY_PLAN_COMPANY
+        description: Wasabi etc
+
+      - name: DAILY_REGISTRATIONS
+        description: Number of users in loyalty plan registering that day
+
+      - name: DAILY_DEREGISTRATIONS
+        description: Number of users in loyalty plan deregistering that day
+
+  - name: user_status_snapshot
+    description: Status counts per day on usergranularity
+    columns:
+      - name: DATE
+        description: All dates with LC changes
+
+      - name: BRAND
+        description: HSBC / LLOYDS etc
+
+      - name: ACTIVE_STATE
+        description: Number of users in active state
+
+      - name: INACTIVE_STATE
+        description: Number of users in inactive state
+
+      - name: DORMANT_STATE
+        description: Number of users in dormant state
+
+      - name: REGISTERED_USERS
+        description: Total number of users registered
+
+  - name: user_status
+    description: Registartions and deregistrations each day
+    columns:
+      - name: DATE
+        description: All dates with LC changes
+
+      - name: BRAND
+        description: HSBC / LLOYDS etc
+
+      - name: DAILY_REGISTRATIONS
+        description: Number of users registering that day
+
+      - name: DAILY_DEREGISTRATIONS
+        description: Number of users deregistering that day
