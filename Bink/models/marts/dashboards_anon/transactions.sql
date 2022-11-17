@@ -1,7 +1,7 @@
 WITH mock_brands AS (
     SELECT *
     FROM {{ref('trans__mock_brands')}}
-),
+)
 
 ,dim_lc AS (
     SELECT *
@@ -15,7 +15,7 @@ WITH mock_brands AS (
 
 ,base_table AS (
     SELECT 
-        t.DATE(EVENT_DATE_TIME) AS DATE
+        DATE(t.EVENT_DATE_TIME) AS DATE
         ,t.LOYALTY_CARD_ID
         ,t.USER_ID
         ,t.LOYALTY_PLAN_NAME
