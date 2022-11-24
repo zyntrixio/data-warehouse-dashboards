@@ -23,7 +23,7 @@ WITH user_statuses AS (
     FROM user_statuses u
     LEFT JOIN dim_date d
         ON d.DATE >= u.STATUS_FROM_DATE
-        AND d.DATE < u.STATUS_TO_DATE
+        AND d.DATE < COALESCE(u.STATUS_TO_DATE,'9999-12-31')
     GROUP BY
         d.DATE
         ,u.BRAND
