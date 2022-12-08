@@ -5,7 +5,7 @@ with VOUCHERS_NON_ANON as (
 
 , mock_brands as (
     select * 
-    from {{ref('trans__mock_brands')}}
+    from {{ref('trans__brands')}}
 )
 
 

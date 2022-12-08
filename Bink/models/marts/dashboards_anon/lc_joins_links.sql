@@ -17,7 +17,7 @@ WITH lc_joins AS (
 
 ,mock_brands AS (
     SELECT *
-    FROM {{ref('trans__mock_brands')}}
+    FROM {{ref('trans__brands')}}
 )
 
 ,dim_lc AS (
