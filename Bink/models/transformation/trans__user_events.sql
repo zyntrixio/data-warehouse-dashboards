@@ -15,7 +15,8 @@ WITH users AS (
         ,'REFRESH' AS EVENT
         ,NULL AS LOYALTY_PLAN_NAME
         ,NULL AS LOYALTY_PLAN_COMPANY
-    FROM {{ref('trans__mock_wallet_refresh')}}
+    FROM {{ref('src__fact_user')}}
+    WHERE EVENT_TYPE = 'REFRESH'
 )
 
 ,transactions AS (
