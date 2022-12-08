@@ -14,6 +14,7 @@ WITH source AS (
         ,IS_MOST_RECENT
         ,CHANNEL
         ,ORIGIN
+        ,BRAND
         ,USER_ID
         ,EMAIL_DOMAIN
         ,INSERTED_DATE_TIME

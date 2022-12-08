@@ -13,6 +13,7 @@ WITH source AS (
         ,IS_MOST_RECENT
         ,ORIGIN
         ,CHANNEL
+        ,BRAND
         ,INSERTED_DATE_TIME
         ,UPDATED_DATE_TIME
     FROM source
