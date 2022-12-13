@@ -143,9 +143,8 @@ WITH users AS (
         ,u.BRAND
     FROM
         add_brand u
-    LEFT JOIN
-        add_brand u2 ON
-        u.USER_ID = u2.USER_ID
+    LEFT JOIN add_brand u2
+        ON u.USER_ID = u2.USER_ID
         AND u.BRAND = u2.BRAND
         AND u.EVENT = 'REFRESH'  
         AND u2.EVENT = 'LC_REGISTER'
