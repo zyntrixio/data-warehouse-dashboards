@@ -15,6 +15,7 @@ WITH user_statuses AS (
         ,BRAND
     HAVING
         DATE IS NOT NULL
+        AND BRAND IS NOT NULL
 )
 
 SELECT *
