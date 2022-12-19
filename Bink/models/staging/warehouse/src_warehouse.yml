@@ -48,5 +48,12 @@ sources:
       
       - name: DIM_LOYALTY_CARD_ACTIVE_SCD
         description: One row per LOYALTY card add per account includes removals.
-
-
+  
+  - name: BINK_SECURE
+    description: Data for DBT template
+    schema: BINK_SECURE
+    loader: DBT
+  
+    tables:
+      - name: DIM_USER
+        description: PII user dimension

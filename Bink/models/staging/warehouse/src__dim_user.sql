@@ -1,12 +1,13 @@
 WITH source AS (
     SELECT * 
-    FROM {{ source('BINK', 'DIM_USER') }}
+    FROM {{ source('BINK_SECURE', 'DIM_USER') }}
 )
 
 ,renamed AS (
     SELECT
         USER_ID
         ,CHANNEL_ID
+        ,EMAIL
         ,DATE_JOINED
         ,IS_ACTIVE
         ,IS_STAFF
