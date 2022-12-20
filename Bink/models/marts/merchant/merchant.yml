@@ -61,3 +61,52 @@ models:
       - name: A003
         description: Adds with and w/out a payment card
 
+  - name: transactions
+    columns:
+      - name: DATE
+        description: Monthly date of the report 
+
+      - name: LOYLATY_PLAN_NAME
+        description: Name of loyalty plan where user transacted
+
+      - name: T001b
+        description: ATV - Average transaction value for EXPORTED transactions
+
+      - name: T002b
+        description: ATV - Average transaction value for SETTLED transactions
+
+      - name: T003b
+        description: Total transaction value for EXPORTED transactiona
+
+      - name: T004b
+        description: Total transaction value for SETTLED transactiona
+
+      - name: T005b
+        description: Total transaction value for REFUNDS
+
+      - name: T006b
+        description: Total transaction value for SPOTTED transactiona
+
+      - name: T007b #not sure what this is
+        description: Average transaction value in £ for all Spotted transactions / AOV for program members
+
+      - name: T008b
+        description: ATF - Total transactions divided by active users
+
+      - name: T009b
+        description: ARPU - Total transaction value divided by active users
+
+      - name: T010b
+        description: Total matched transactions
+
+      - name: T011b #not sure on this
+        description: Total streamed transactions
+
+      - name: W001b
+        description: na
+
+      - name: W002b
+        description: na
+
+      - name: W003b
+        description: na
