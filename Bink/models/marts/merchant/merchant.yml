@@ -18,3 +18,29 @@ models:
       - name: AU003b
         description: Total DISTINCT loyalty members who have had at least 1 spotted transaction in the month
 
+  - name: joins
+    columns:
+      - name: DATE
+        description: Monthly date of the report 
+
+      - name: LOYLATY_PLAN_NAME
+        description: Name of loyalty plan where user transacted
+
+      - name: J001
+        description: Total joins scheme in the month
+
+      - name: J002
+        description: Total joins and PLL enabled
+
+      - name: J003
+        description: Total billable joins in month
+
+      - name: J004
+        description: Total cumulative Joins scheme
+
+      - name: J005
+        description: Joined and opted in to marketing
+
+      - name: J006
+        description: Joined and opted in to marketing %
+
