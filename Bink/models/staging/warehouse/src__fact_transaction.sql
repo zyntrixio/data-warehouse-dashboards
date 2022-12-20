@@ -11,6 +11,7 @@ WITH source AS (
         ,TRANSACTION_ID
         ,PROVIDER_SLUG
         ,LOYALTY_PLAN_NAME
+        ,FEED_TYPE
         ,TRANSACTION_DATE
         ,SPEND_AMOUNT
         ,SPEND_CURRENCY
