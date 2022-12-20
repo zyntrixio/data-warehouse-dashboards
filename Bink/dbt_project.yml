@@ -58,6 +58,9 @@ models:
       dashboards_anon:
           +schema: DASHBOARDS_ANON
           +materialized: table
+      merchant:
+          +schema: MERCHANT
+          +materialized: table
     staging:
       +schema: DASHBOARDS_STAGING      # All staging models go to the "staging" schema
       +materialized: view

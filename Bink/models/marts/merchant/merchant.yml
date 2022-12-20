@@ -1,0 +1,20 @@
+version: 2
+
+models:
+  - name: active_users
+    columns:
+      - name: DATE
+        description: Monthly date of the report 
+
+      - name: LOYLATY_PLAN_NAME
+        description: Name of loyalty plan where user transacted
+
+      - name: AU001b
+        description: Total DISTINCT loyalty members who have had at least 1 matched transaction in the month 
+
+      - name: AU002b
+        description: (SqM Definition) Members who have had at least 1 settlement transaction in the month
+
+      - name: AU003b
+        description: Total DISTINCT loyalty members who have had at least 1 spotted transaction in the month
+
