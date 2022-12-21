@@ -48,7 +48,7 @@ WITH joins AS (
         TESTER = FALSE
     GROUP BY
         DATE
-        ,LOYALTY_PLAN        
+        ,LOYALTY_PLAN_NAME        
 )
 
 SELECT
