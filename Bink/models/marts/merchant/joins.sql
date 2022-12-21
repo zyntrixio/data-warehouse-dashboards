@@ -21,7 +21,7 @@ WITH joins AS (
 ,extract_joins AS (
     SELECT
         DATE_TRUNC('month', j.EVENT_DATE_TIME) AS DATE
-        ,j.LOYALTY_PLAN
+        ,j.LOYALTY_PLAN_NAME
         ,j.LOYALTY_CARD_ID
         ,j.AUTH_TYPE
         ,CONTAINS(u.EMAIL, 'e2e.bink.com') AS TESTER
@@ -39,7 +39,7 @@ WITH joins AS (
 ,metrics AS (
     SELECT
         DATE
-        ,LOYALTY_PLAN
+        ,LOYALTY_PLAN_NAME
         ,COUNT(DISTINCT LOYALTY_CARD_ID) AS J001 --do we want to be counting a unique id?
         ,NULL AS J002 --need pll and opt-in for the rest
         ,NULL AS J003
