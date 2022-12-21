@@ -22,8 +22,8 @@ packages:
     version: [">=0.4.0", "<0.5.0"]
 
   # Lumilinks custom developed tests, macros, and other utilities: dbt-lumi-utils
-  - git: "git@github.com:lumilinks-group/dbt-lumi-utils.git" # git SSH URL
-    revision: "v0.1.0"
+  # - git: "git@github.com:lumilinks-group/dbt-lumi-utils.git" # git SSH URL
+  #   revision: "v0.1.0"
 
   - package: dbt-labs/codegen
     version: 0.7.0

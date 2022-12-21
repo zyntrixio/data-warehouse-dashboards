@@ -216,3 +216,27 @@ models:
 
       - name: DAILY_DEREGISTRATIONS
         description: Number of users deregistering that day
+
+  - name: transactions
+    description: fact transacttion table with brand and company name
+    columns:
+      - name: DATE
+        description: Date of transaction
+
+      - name: BRAND
+        description: HSBC / LLOYDS etc
+
+      - name: LOYALTY_CARD_ID
+        description: Loyalty card associated with the transaction
+
+      - name: USER_ID
+        description: User associated with the transaction
+
+      - name: LOYALTY_PLAN_NAME
+        description: Plan name for the loyalty card
+
+      - name: SPEND_AMOUNT
+        description: Transaction value
+
+      - name: LOYALTY_PLAN_COMPANY
+        description: Plan comapny name for the loyalty card
