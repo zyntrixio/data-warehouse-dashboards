@@ -76,16 +76,16 @@ models:
         description: ATV - Average transaction value for SETTLED transactions
 
       - name: T003b
-        description: Total transaction value for EXPORTED transactiona
+        description: Total transaction value for EXPORTED transactions
 
       - name: T004b
-        description: Total transaction value for SETTLED transactiona
+        description: Total transaction value for SETTLED transactions
 
       - name: T005b
         description: Total transaction value for REFUNDS
 
       - name: T006b
-        description: Total transaction value for SPOTTED transactiona
+        description: Total transaction value for SPOTTED transactions
 
       - name: T007b #not sure what this is
         description: Average transaction value in £ for all Spotted transactions / AOV for program members
