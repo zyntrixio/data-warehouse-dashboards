@@ -1,0 +1,13 @@
+version: 2
+
+sources:
+
+  - name: MERCHANT
+    description: Bink merchant grid tables schema
+    schema: BINK_STAGING
+    tags: ['source']
+
+    tables:
+      - name: STG_MERCHANT__WASABI_GRID
+        identifier: STG_MERCHANT__WASABI_GRID
+        description: This the historic grids for wasabi monthly reporting
