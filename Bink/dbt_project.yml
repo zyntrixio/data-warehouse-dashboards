@@ -43,6 +43,9 @@ vars:
   'dbt_constraints_sources_uk_enabled': false
   'dbt_constraints_sources_fk_enabled': false
 
+  # merchant reporting variables
+  'cutoff': '2022-11-01'
+
 models:
   elementary:
     +schema: DASHBOARDS_MONITORING # Rename to <project>_MONITORING
@@ -60,6 +63,9 @@ models:
           +materialized: table
       merchant:
           +schema: MERCHANT
+          +materialized: table
+      merchant_dashboards:
+          +schema: MERCHANT_DASHBOARDS
           +materialized: table
     staging:
       +schema: DASHBOARDS_STAGING      # All staging models go to the "staging" schema

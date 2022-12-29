@@ -1,0 +1,6 @@
+version: 2
+#update with collumns and descriptions once complete
+
+models:
+  - name: wasabi_monthly
+    description: wasabi monthly grids made from a comibnation of events in dwh and merchant static files
