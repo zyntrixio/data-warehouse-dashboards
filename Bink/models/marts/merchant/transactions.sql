@@ -54,27 +54,21 @@ WITH export_transactions AS (
         DATE
         ,LOYALTY_PLAN_NAME
         ,AVG(SPEND_AMOUNT) AS T001b
-        ,AVG(CASE FEED_TYPE 
-                    WHEN 'SETTLED' 
-                    THEN SPEND_AMOUNT
-                    END) AS T002b
+        ,AVG(CASE FEED_TYPE WHEN 'SETTLED' THEN SPEND_AMOUNT END) AS T002b
         ,SUM(SPEND_AMOUNT) AS T003b
-        ,SUM(CASE FEED_TYPE 
-                    WHEN 'SETTLED' 
-                    THEN SPEND_AMOUNT
-                    END) AS T004b
-        ,SUM(CASE FEED_TYPE 
-                    WHEN 'REFUND' 
-                    THEN SPEND_AMOUNT
-                    END) AS T005b
-        ,NULL AS T006b -- missing spotted transactions
-        ,NULL AS T007b -- missing spotted transactions
-        ,COUNT(DISTINCT TRANSACTION_ID)/COUNT(DISTINCT IDENTIFIER) AS T008b
-        ,SUM(SPEND_AMOUNT)/COUNT(DISTINCT IDENTIFIER) AS T009b
-        ,COUNT(DISTINCT TRANSACTION_ID) AS T010b
-        ,NULL AS W001b
-        ,NULL AS W002b
-        ,NULL AS W003b
+        ,SUM(CASE FEED_TYPE WHEN 'SETTLED' THEN SPEND_AMOUNT END) AS T004b
+        ,SUM(CASE FEED_TYPE WHEN 'REFUND' THEN SPEND_AMOUNT END) AS T005b
+        ,COUNT(DISTINCT TRANSACTION_ID)/COUNT(DISTINCT IDENTIFIER) AS T006b
+        ,SUM(SPEND_AMOUNT)/COUNT(DISTINCT IDENTIFIER) AS T007b
+        ,NULL AS T008b --missing txn response
+        ,NULL AS T009b --missing txn response
+        ,NULL AS T010b --missing txn response
+        ,NULL AS T011b --missing txn response
+        ,COUNT(DISTINCT TRANSACTION_ID) T012b
+        ,COUNT(DISTINCT CASE FEED_TYPE WHEN 'SETTLED' THEN TRANSACTION_ID END) AS T013b
+        ,NULL AS T014b --cumulative
+        ,NULL AS T015b --cumulative
+        ,NULL AS T016b --missing txn response
 
     FROM
         add_testers
@@ -85,14 +79,34 @@ WITH export_transactions AS (
         ,LOYALTY_PLAN_NAME
 )
 
+,expand_metrics AS (
+    SELECT
+        DATE
+        ,LOYALTY_PLAN_NAME
+        ,T001b
+        ,T002b
+        ,T003b
+        ,T004b
+        ,T005b
+        ,T006b
+        ,T007b
+        ,T008b
+        ,T009b
+        ,T010b
+        ,T011b
+        ,T012b
+        ,T013b
+        ,SUM(T012b) OVER (PARTITION BY LOYALTY_PLAN_NAME ORDER BY DATE ASC ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW) AS T014b
+        ,SUM(T013b) OVER (PARTITION BY LOYALTY_PLAN_NAME ORDER BY DATE ASC ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW) AS T015b
+        ,T016b
+    FROM
+        metrics
+)
+
 SELECT
     *
 FROM
-    metrics
+    expand_metrics
 ORDER BY
     DATE
     ,LOYALTY_PLAN_NAME
-
-
-
-
