@@ -51,13 +51,11 @@ WITH export_transactions AS (
     SELECT
         DATE
         ,LOYALTY_PLAN_NAME
+        ,NULL AS L001b -- missing PLL Link
         ,COUNT(DISTINCT IDENTIFIER) AS AU001b
-        ,COUNT(DISTINCT
-            CASE FEED_TYPE 
-                WHEN 'SETTLED' 
-                THEN IDENTIFIER
-                END) AS AU002b
+        ,COUNT(DISTINCT CASE FEED_TYPE WHEN 'SETTLED' THEN IDENTIFIER END) AS AU002b
         ,COUNT(DISTINCT IDENTIFIER) AS AU003b
+        ,NULL AS AU004b -- missing PLL Link
     FROM
         add_testers
     WHERE
