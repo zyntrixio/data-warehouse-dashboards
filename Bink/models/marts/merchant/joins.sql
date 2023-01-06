@@ -41,12 +41,12 @@ WITH joins AS (
         DATE
         ,LOYALTY_PLAN_NAME
         ,COUNT(DISTINCT LOYALTY_CARD_ID) AS J001 --do we want to be counting a unique id?
-        ,NULL AS J002 --need pll and opt-in for the rest
+        ,NULL AS J002 --need PLL
         ,NULL AS J003
         ,NULL AS J004
-        ,NULL AS J005
-        ,NULL AS J006
-        ,NULL AS J007
+        ,NULL AS J005 --need optin
+        ,NULL AS J006 --need optin
+        ,NULL AS J007 --n/a
     FROM 
         extract_joins
     WHERE
@@ -56,7 +56,22 @@ WITH joins AS (
         ,LOYALTY_PLAN_NAME
 )
 
+,expand_metrics AS (
+    SELECT
+        DATE
+        ,LOYALTY_PLAN_NAME
+        ,J001
+        ,J002
+        ,J001 AS J003 --Billable = Normal for all current merchants
+        ,SUM(J001) OVER (PARTITION BY LOYALTY_PLAN_NAME ORDER BY DATE ASC ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW) AS J004
+        ,J005
+        ,J006
+        ,J007
+    FROM
+        metrics
+)
+
 SELECT
     *
 FROM
-    metrics
+    expand_metrics
