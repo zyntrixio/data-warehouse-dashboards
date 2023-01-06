@@ -6,7 +6,7 @@ Modified at:
 Modified by:
 */
 
-WITH joins AS (
+WITH adds AS (
     SELECT
         *
     FROM {{ref('src__fact_lc_add')}}
@@ -18,32 +18,32 @@ WITH joins AS (
     FROM {{ref('src__dim_user')}}
 )
 
-,extract_joins AS (
+,extract_adds AS (
     SELECT
-        DATE_TRUNC('month', j.EVENT_DATE_TIME) AS DATE
-        ,j.LOYALTY_PLAN_NAME
-        ,j.LOYALTY_CARD_ID
-        ,j.AUTH_TYPE
+        DATE_TRUNC('month', a.EVENT_DATE_TIME) AS DATE
+        ,a.LOYALTY_PLAN_NAME
+        ,a.LOYALTY_CARD_ID
+        ,a.AUTH_TYPE
         ,CONTAINS(u.EMAIL, 'e2e.bink.com') AS TESTER
     FROM
-        joins j
+        adds a
     LEFT JOIN
-        users u ON u.USER_ID = j.USER_ID
+        users u ON u.USER_ID = a.USER_ID
     WHERE
-        j.AUTH_TYPE IN ('AUTH', 'ADD AUTH')
+        a.AUTH_TYPE IN ('AUTH', 'ADD AUTH')
         AND 
-        j.EVENT_TYPE = 'SUCCESS'
+        a.EVENT_TYPE = 'SUCCESS'
 )
 
 ,metrics AS (
     SELECT
         DATE
         ,LOYALTY_PLAN_NAME
-        ,COUNT(DISTINCT LOYALTY_CARD_ID) AS A001 --do we want to be counting a unique id?
+        ,NULL AS A001 --need pll
         ,NULL AS A002 --need pll
-        ,NULL AS A003
+        ,COUNT(DISTINCT LOYALTY_CARD_ID) AS A003 --do we want to be counting a unique id?
     FROM 
-        extract_joins
+        extract_adds
     WHERE
         TESTER = FALSE
     GROUP BY
