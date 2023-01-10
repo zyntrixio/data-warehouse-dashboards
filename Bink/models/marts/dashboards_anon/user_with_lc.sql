@@ -132,27 +132,43 @@ WITH mock_brands AS (
     FROM u_deletions
 ) 
 
+,min_max_dates AS (
+    SELECT
+        BRAND
+        ,MIN(DATE) AS MIN_DATE
+        ,MAX(DATE) AS MAX_DATE
+    FROM
+        union_matching_records
+    GROUP BY
+        BRAND
+)
+
+,dates_per_brand AS (
+    SELECT
+        d.BRAND
+        ,dr.DATE
+    FROM min_max_dates d
+    LEFT JOIN date_range dr
+        ON dr.DATE >= d.MIN_DATE
+        AND dr.DATE <= d.MAX_DATE
+)
+
 ,count_up as (
     SELECT
         d.DATE
-        ,r.BRAND
+        ,d.BRAND
         ,COALESCE(uc.C,0) AS LC_USERS_CREATED
         ,COALESCE(ud.C,0) AS LC_USERS_DELETED
         ,LC_USERS_CREATED - LC_USERS_DELETED AS DAILY_CHANGE_IN_LC_USERS
-        ,SUM(DAILY_CHANGE_IN_LC_USERS) OVER (PARTITION BY r.BRAND ORDER BY d.DATE ASC) AS TOTAL_LC_USERS_COUNT
-    FROM date_range d
-    LEFT JOIN union_matching_records r
-        ON d.DATE = r.DATE
+        ,SUM(DAILY_CHANGE_IN_LC_USERS) OVER (PARTITION BY d.BRAND ORDER BY d.DATE ASC) AS TOTAL_LC_USERS_COUNT
+    FROM dates_per_brand d
     LEFT JOIN u_creations uc
         ON d.DATE = uc.START_DATE
-            AND r.BRAND = uc.BRAND
+            AND d.BRAND = uc.BRAND
     LEFT JOIN u_deletions ud
         ON d.DATE = ud.END_DATE
-            AND r.BRAND = ud.BRAND
+            AND d.BRAND = ud.BRAND
 )
 
 SELECT *
 FROM count_up
-ORDER BY
-    DATE
-    ,BRAND
