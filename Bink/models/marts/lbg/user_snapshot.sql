@@ -39,9 +39,7 @@ LEFT JOIN dim_date d
 GROUP BY
     d.DATE
     ,u.BRAND
-ORDER BY
-    d.DATE
-    ,u.BRAND
+HAVING DATE IS NOT NULL
 )
 
 SELECT *
