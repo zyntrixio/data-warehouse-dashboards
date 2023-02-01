@@ -1,6 +1,6 @@
 WITH source AS (
     SELECT * 
-    FROM {{ source('BINK', 'FACT_USER') }}
+    FROM {{ source('BINK_SECURE', 'FACT_USER') }}
     WHERE EVENT_TYPE iS NOT NULL
 )
 
@@ -9,6 +9,7 @@ WITH source AS (
         EVENT_ID
         ,EVENT_DATE_TIME
         ,USER_ID
+        ,EXTERNAL_USER_REF
         ,EVENT_TYPE
         ,IS_MOST_RECENT
         ,ORIGIN

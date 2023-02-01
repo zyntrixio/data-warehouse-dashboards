@@ -1,6 +1,6 @@
 WITH source AS (
     SELECT * 
-    FROM {{ source('BINK', 'FACT_LOYALTY_CARD_ADD') }}
+    FROM {{ source('BINK_SECURE', 'FACT_LOYALTY_CARD_ADD') }}
 )
 
 ,renamed AS (
@@ -16,6 +16,7 @@ WITH source AS (
         ,ORIGIN
         ,BRAND
         ,USER_ID
+        ,EXTERNAL_USER_REF
         ,EMAIL_DOMAIN
         ,INSERTED_DATE_TIME
         ,UPDATED_DATE_TIME
