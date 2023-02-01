@@ -45,7 +45,7 @@ ORDER BY
 )
 
 SELECT *
-FROM count_up;
+FROM count_up
 
 
 
