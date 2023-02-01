@@ -1,14 +1,14 @@
 WITH user_statuses AS (
     SELECT *
     FROM {{ref('trans__lbg_user')}}
-    WHERE EVENT_TYPE IN ('CREATED', 'DELETED')
+    WHERE EVENT IN ('CREATED', 'DELETED')
 )
 
 ,dim_date AS (
     SELECT *
     FROM {{ref('src__dim_date')}}
     WHERE
-        DATE >= (SELECT MIN(STATUS_FROM_DATE) FROM user_statuses)
+        DATE >= (SELECT MIN(EVENT_DATE_TIME) FROM user_statuses)
         AND DATE <= CURRENT_DATE()
 )
 
