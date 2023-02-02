@@ -36,3 +36,14 @@ models:
 
       - name: DEREGISTERED_USERS
         description: Total number of users deregistered
+
+  - name: user_with_loyalty_cards
+    columns:
+      - name: DATE
+        description: All dates with LC changes
+
+      - name: BRAND
+        description: HSBC / LLOYDS etc
+
+      - name: TOTAL_LC_USERS_COUNT
+        description: Total LC (Rolling count) per day, brand
