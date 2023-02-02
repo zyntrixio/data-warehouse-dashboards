@@ -1,7 +1,7 @@
 WITH user_statuses AS (
     SELECT *
     FROM {{ref('trans__lbg_user')}}
-    WHERE EVENT IN ('CREATED', 'DELETED')
+    WHERE EVENT IN ('LC_REGISTER', 'LC_REMOVE')
 )
 
 ,dim_date AS (
