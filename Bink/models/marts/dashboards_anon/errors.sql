@@ -22,7 +22,7 @@ WITH mock_brands AS (
     SELECT *
     FROM {{ref('src__dim_date')}}
     WHERE
-        DATE >= (SELECT MIN(EVENT_DATE_TIME) FROM lc_sc)
+        DATE >= (SELECT MIN(DATE(EVENT_DATE_TIME)) FROM lc_sc)
         AND DATE <= CURRENT_DATE()
 )
 

@@ -8,7 +8,7 @@ WITH user_statuses AS (
     SELECT *
     FROM {{ref('src__dim_date')}}
     WHERE
-        DATE >= (SELECT MIN(EVENT_DATE_TIME) FROM user_statuses)
+        DATE >= (SELECT MIN(DATE(EVENT_DATE_TIME)) FROM user_statuses)
         AND DATE <= CURRENT_DATE()
 )
 
@@ -32,7 +32,7 @@ WITH user_statuses AS (
   SELECT
     d.DATE
     ,u.BRAND
-    ,COUNT(DISTINCT EXTERNAL_USER_REF) TOTAL_LC_USERS_COUNT
+    ,COUNT(DISTINCT EXTERNAL_USER_REF) AS TOTAL_LC_USERS_COUNT
 FROM to_from_dates u
 LEFT JOIN dim_date d
     ON d.DATE >= u.FROM_DATE

@@ -8,7 +8,7 @@ WITH user_statuses AS (
     SELECT *
     FROM {{ref('src__dim_date')}}
     WHERE
-        DATE >= (SELECT MIN(EVENT_DATE_TIME) FROM user_statuses)
+        DATE >= (SELECT MIN(DATE(EVENT_DATE_TIME)) FROM user_statuses)
         AND DATE <= CURRENT_DATE()
 )
 
