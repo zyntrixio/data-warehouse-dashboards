@@ -40,7 +40,7 @@ WITH users AS (
     FROM {{ref('src__dim_loyalty_card')}}
 )
 
-,create_delete AS ( -- ensures only valid create and deletes are counted
+,create_delete AS ( -- ensures only valid create and deletes are counted. Takes last create event.
     SELECT
         USER_ID
         ,EVENT_DATE_TIME
@@ -109,7 +109,7 @@ WITH users AS (
         ON lc.LOYALTY_CARD_ID = dlc.LOYALTY_CARD_ID
 )
 
-,all_together AS (
+,all_together AS (--Above code is pointless this just unions all events for users all lc events and transactions.
     SELECT * FROM creates
     UNION ALL
     SELECT * FROM deletes
@@ -133,13 +133,13 @@ WITH users AS (
         brands b ON u.USER_ID = b.USER_ID
 )
 
-,refresh_each_lp AS ( -- Add a refresh event for each registered LC plan
+,refresh_each_lp AS ( -- Add a refresh event for each registered LC. This is to help with activity statuses for LC only.
     SELECT
         u.USER_ID
         ,u.EVENT_DATE_TIME
         ,u.EVENT
-        ,u2.LOYALTY_PLAN_NAME AS LOYALTY_PLAN
-        ,u2.LOYALTY_PLAN_COMPANY AS LOYALTY_PLAN_COMPANY
+        ,COALESCE(u.LOYALTY_PLAN_NAME, u2.LOYALTY_PLAN_NAME) AS LOYALTY_PLAN
+        ,COALESCE(u.LOYALTY_PLAN_COMPANY, u2.LOYALTY_PLAN_COMPANY) AS LOYALTY_PLAN_COMPANY
         ,u.BRAND
     FROM
         add_brand u
@@ -153,3 +153,5 @@ WITH users AS (
 
 SELECT *
 FROM refresh_each_lp
+
+

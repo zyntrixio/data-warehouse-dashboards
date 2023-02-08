@@ -1,0 +1,49 @@
+version: 2
+
+models:
+  - name: user_loyalty_plan_snapshot
+    description: Status counts per day on user & loyalty-plan granularity
+    columns:
+      - name: DATE
+        description: All dates with LC changes
+
+      - name: BRAND
+        description: HSBC / LLOYDS etc
+
+      - name: LOYALTY_PLAN
+        description: Wasabi club etc
+
+      - name: LOYALTY_PLAN_COMPANY
+        description: Wasabi etc
+
+      - name: REGISTERED_USERS
+        description: Total number of users registered within the loyalty plan
+
+      - name: DEREGISTERED_USERS
+        description: Total number of users deregistered
+
+  - name: user_snapshot
+    description: Status counts per day on usergranularity
+    columns:
+      - name: DATE
+        description: All dates with LC changes
+
+      - name: BRAND
+        description: HSBC / LLOYDS etc
+
+      - name: REGISTERED_USERS
+        description: Total number of users registered
+
+      - name: DEREGISTERED_USERS
+        description: Total number of users deregistered
+
+  - name: user_with_loyalty_cards
+    columns:
+      - name: DATE
+        description: All dates with LC changes
+
+      - name: BRAND
+        description: HSBC / LLOYDS etc
+
+      - name: TOTAL_LC_USERS_COUNT
+        description: Total LC (Rolling count) per day, brand
