@@ -29,8 +29,8 @@ def dbt_cli_task(dbt_cli_profile, command):
     return trigger_dbt_cli_command(
         command=command,
         overwrite_profiles=True,
-        profiles_dir=f"/opt/github.com/binkhq/data-warehouse/Prefect",
-        project_dir=f"/opt/github.com/binkhq/data-warehouse/Bink",
+        profiles_dir=f"/opt/github.com/binkhq/data-warehouse-dashboards/Prefect",
+        project_dir=f"/opt/github.com/binkhq/data-warehouse-dashboards/Bink",
         dbt_cli_profile=dbt_cli_profile,
     )
 
