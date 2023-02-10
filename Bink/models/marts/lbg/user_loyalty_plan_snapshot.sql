@@ -1,3 +1,19 @@
+/*
+Created by:         Anand Bhakta
+Created date:       2023-02-05
+Last modified by:   
+Last modified date: 
+
+Description:
+    Rewrite of the LL table user_loyalty_plan_status_snapshot containing snapshot data of all user registrations with loyalty cards split by merchant.
+
+Notes:
+    This code can be made more efficient if the start is pushed to the trans__lbg_user code and that can be the source for the majority of the dashboards including user_loyalty_plan_snapshot and user_with_loyalty_cards
+
+Parameters:
+    source_object      - trans__lbg_user, src__dim_date
+*/
+
 WITH user_statuses AS (
     SELECT *
     FROM {{ref('trans__lbg_user')}}

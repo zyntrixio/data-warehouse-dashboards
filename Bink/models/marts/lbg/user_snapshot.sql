@@ -1,3 +1,15 @@
+/*
+Created by:         Anand Bhakta
+Created date:       2023-02-05
+Last modified by:   
+Last modified date: 
+
+Description:
+    Rewrite of the LL table user_status_snapshot containing snapshot data of all user registrations.
+Parameters:
+    source_object      - trans__lbg_user, src__dim_date
+*/
+
 WITH user_statuses AS (
     SELECT *
     FROM {{ref('trans__lbg_user')}}
