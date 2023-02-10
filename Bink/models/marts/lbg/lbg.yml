@@ -22,6 +22,12 @@ models:
       - name: DEREGISTERED_USERS
         description: Total number of users deregistered
 
+      - name: DAILY_REGISTRATIONS
+        description: Total number of registerations within the loyalty plan on the day
+
+      - name: DAILY_DEREGISTRATIONS
+        description: Total number of deregisterations on the day
+
   - name: user_snapshot
     description: Status counts per day on usergranularity
     columns:
@@ -110,4 +116,16 @@ models:
 
       - name: LINK_DELETE
         description: Daily join journey delete requests made
+
+      - name: REGISTERED_USERS
+        description: Total users in a registered state with the loyalty plan
+ 
+      - name: DEREGISTERED_USERS
+        description: Total users in a deregistered state with the loyalty plan
+
+      - name: DAILY_REGISTRATIONS
+        description: Total successful registratsion in the day with the loyalty plan
+
+      - name: DAILY_DEREGISTRATIONS
+        description: Total successful deregistratsion in the day with the loyalty plan
         
