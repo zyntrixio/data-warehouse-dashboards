@@ -1,6 +1,6 @@
 WITH source AS (
     SELECT * 
-    FROM {{ source('SERVICE_DATA', 'API_RESPONSE_TIMES') }}
+    FROM {{ source('SERVICE_DATA', 'FACT_API_RESPONSE_TIMES') }}
 )
 
 ,renamed AS (
