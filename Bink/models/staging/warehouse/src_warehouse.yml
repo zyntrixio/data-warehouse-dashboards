@@ -103,6 +103,5 @@ sources:
     loader: DBT
     
     tables:
-      - name: API_RESPONSE_TIMES
+      - name: FACT_API_RESPONSE_TIME
         description: Api response times
-
