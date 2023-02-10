@@ -207,6 +207,35 @@ HAVING DATE IS NOT NULL
         ON a.date=s.date and a.brand = s.brand and a.loyalty_plan_name = s.loyalty_plan_name
 )
 
+,add_user_metrics AS (
+    SELECT
+        DATE
+        ,BRAND
+        ,LOYALTY_PLAN_NAME
+        ,LOYALTY_PLAN_COMPANY
+        ,JOIN_SUCCESS_STATE
+        ,JOIN_FAILED_STATE
+        ,JOIN_PENDING_STATE
+        ,JOIN_REMOVED_STATE
+        ,LINK_SUCCESS_STATE
+        ,LINK_FAILED_STATE
+        ,LINK_PENDING_STATE
+        ,LINK_REMOVED_STATE
+        ,JOIN_REQUEST_PENDING
+        ,JOIN_FAILED
+        ,JOIN_SUCCESSFUL
+        ,JOIN_DELETE
+        ,LINK_REQUEST_PENDING
+        ,LINK_FAILED
+        ,LINK_SUCCESSFUL
+        ,LINK_DELETE
+        ,JOIN_SUCCESS_STATE+LINK_SUCCESS_STATE AS REGISTERED_USERS
+        ,LINK_REMOVED_STATE+JOIN_REMOVED_STATE AS DEREGISTERED_USERS
+        ,JOIN_SUCCESSFUL+LINK_SUCCESSFUL AS DAILY_REGISTRATIONS
+        ,JOIN_DELETE+LINK_DELETE AS DAILY_DEREGISTRATIONS
+    FROM all_together
+)
+
 select * 
-from all_together
+from add_user_metrics
 where LOYALTY_PLAN_NAME is not null --this can be removed when datafix implemented
