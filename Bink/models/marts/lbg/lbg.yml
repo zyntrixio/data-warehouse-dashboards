@@ -47,3 +47,67 @@ models:
 
       - name: TOTAL_LC_USERS_COUNT
         description: Total LC (Rolling count) per day, brand
+
+  - name: lc_links_joins
+    description: Counts of loyalty card to loyalty plan association in success, pending, failed, deleted states values shown as snapshot and absolute counts.
+    columns:
+      - name: DATE
+        description: All dates with LC changes
+
+      - name: BRAND
+        description: HSBC / LLOYDS etc
+
+      - name: LOYALTY_PLAN
+        description: Wasabi club etc
+
+      - name: LOYALTY_PLAN_COMPANY
+        description: Wasabi etc
+
+      - name: JOIN_SUCCESS_STATE
+        description: Snapshot join journey cards in success state
+
+      - name: JOIN_FAILED_STATE
+        description: Snapshot join journey cards in success state
+
+      - name: JOIN_PENDING_STATE
+        description: Snapshot join journey cards in success state
+
+      - name: JOIN_REMOVED_STATE
+        description: Snapshot join journey cards in success state
+
+      - name: LINK_SUCCESS_STATE
+        description: Snapshot link journey cards in success state
+
+      - name: LINK_FAILED_STATE
+        description: Snapshot link journey cards in success state
+
+      - name: LINK_PENDING_STATE
+        description: Snapshot link journey cards in success state
+
+      - name: LINK_REMOVED_STATE
+        description: Snapshot link journey cards in success state
+
+      - name: JOIN_REQUEST_PENDING
+        description: Daily join journey requests made
+
+      - name: JOIN_FAILED
+        description: Daily join journey failed requests made
+
+      - name: JOIN_SUCCESSFUL
+        description: Daily join journey successful requests made
+
+      - name: JOIN_DELETE
+        description: Daily join journey delete requests made
+
+      - name: LINK_REQUEST_PENDING
+        description: Daily join journey requests made
+
+      - name: LINK_FAILED
+        description: Daily join journey failed requests made
+
+      - name: LINK_SUCCESSFUL
+        description: Daily join journey successful requests made
+
+      - name: LINK_DELETE
+        description: Daily join journey delete requests made
+        
