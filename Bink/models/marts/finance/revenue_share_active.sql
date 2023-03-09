@@ -6,30 +6,39 @@ Last modified by:
 Last modified date: 
 
 Description:
-	Create table with calcs for revenue share views
+	Create table with calcs for revenue share Active Users For lloyds
 
 Parameters:
-    ref_object      
+    Ref FACT_TRANSACTION   
 
+Formatted by: SQLFMT plugin
 */
+{{
+  config(
+    materialized = 'table',
+    )
+}}
 
-WITH active_user AS (
-    SELECT * FROM "BINK"."BINK"."FACT_TRANSACTION"
-)
+with
+    active_user as (select * from "BINK"."BINK"."FACT_TRANSACTION"),
+    active_user_channel as (
+        select distinct user_id, channel, event_type
+        from "BINK"."BINK"."FACT_USER"
+        where event_type = 'CREATED' and channel = 'LLOYDS'
+    ),
+    active_user_stage as (
+        select
+            date(date_trunc('month', t.event_date_time)) as date,
+            t.loyalty_id,
+            t.user_id,
+            t.provider_slug as merchant,
+            uc.channel
+        from active_user t
+        inner join active_user_channel uc on uc.user_id = t.user_id
+    )
 
-,active_user_channel AS (
-    SELECT DISTINCT USER_ID, CHANNEL, EVENT_TYPE FROM "BINK"."BINK"."FACT_USER" WHERE EVENT_TYPE = 'CREATED'
-)
-
-,combined_table as (
-    SELECT
-        DATE(t.EVENT_DATE_TIME) AS DATE
-        ,t.LOYALTY_ID
-        ,t.USER_ID
-        ,uc.CHANNEL
-    FROM active_user t
-    LEFT JOIN active_user_channel uc ON
-        uc.USER_ID = t.USER_ID
-)
-
-SELECT * FROM combined_table LIMIT 100;
+select date, merchant, channel, count(distinct loyalty_id)
+from active_user_stage
+group by channel, merchant, date
+order by date desc
+;

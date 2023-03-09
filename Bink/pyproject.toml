@@ -7,7 +7,7 @@ readme = "README.md"
 
 [tool.poetry.dependencies]
 python = "^3.10"
-dbt-snowflake = "^1.2.0"
+dbt-snowflake = "^1.4.1"
 
 [build-system]
 requires = ["poetry-core"]
