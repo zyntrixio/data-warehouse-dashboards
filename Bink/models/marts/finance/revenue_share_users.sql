@@ -11,6 +11,7 @@ Description:
 Parameters:
     ref_object      
 
+Formatted by: SQLFMT plugin
 */
 {{
     config(
