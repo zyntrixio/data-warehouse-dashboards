@@ -14,8 +14,8 @@ Parameters:
 Formatted by: SQLFMT plugin
 */
 {{
-  config(
-    materialized = 'table',
+    config(
+        materialized="table",
     )
 }}
 

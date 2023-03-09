@@ -12,25 +12,30 @@ Parameters:
     ref_object      
 
 */
-with
-    joins as (select * from "BINK"."BINK"."FACT_LOYALTY_CARD_ADD"),
-    select_joins as (
-        select
-            date_trunc('month', event_date_time) as report_month,
-            auth_type,
-            channel,
-            event_type,
-            loyalty_card_id,
-            loyalty_plan_name
-        from joins
-        where auth_type in ('JOIN', 'REGISTER') and event_type = 'SUCCESS'
-    ),
-    count_joins as (
-        select report_month, channel, loyalty_plan_name, count(distinct loyalty_card_id)
-        from select_joins
-        group by channel, loyalty_plan_name, report_month
+{{
+    config(
+        materialized="table",
     )
+}}
+
+select_joins as (
+    select
+        date_trunc('month', event_date_time) as report_month,
+        auth_type,
+        channel,
+        event_type,
+        loyalty_card_id,
+        loyalty_plan_name
+    from joins
+    where auth_type in ('JOIN', 'REGISTER') and event_type = 'SUCCESS'
+),
+count_joins as (
+    select report_month, channel, loyalty_plan_name, count(distinct loyalty_card_id)
+    from select_joins
+    group by channel, loyalty_plan_name, report_month
+)
 
 select *
+from count_joins
 from count_joins
 order by report_month, channel, loyalty_plan_name
