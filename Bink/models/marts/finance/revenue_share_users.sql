@@ -26,7 +26,7 @@ WITH
             ,channel
             ,event_type
             ,loyalty_card_id
-            loyalty_plan_name
+            ,loyalty_plan_name
         FROM joins
         WHERE auth_type
         IN ('JOIN', 'REGISTER')
@@ -40,8 +40,8 @@ WITH
             ,count(distinct loyalty_card_id)
         FROM select_joins
         GROUP BY
-            channel 
-            ,loyalty_plan_name 
+            channel
+            ,loyalty_plan_name
             ,report_month
     )
 

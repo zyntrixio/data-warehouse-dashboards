@@ -37,7 +37,7 @@ active_user_count as (
         DATE_US
         ,MERCHANT
         ,CHANNEL
-        COUNT(DISTINCT LOYALTY_ID) AS ACTIVE_USER
+        ,COUNT(DISTINCT LOYALTY_ID) AS ACTIVE_USER
     FROM
         active_user_stage
     GROUP BY

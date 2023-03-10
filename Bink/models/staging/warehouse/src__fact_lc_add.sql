@@ -11,6 +11,7 @@ WITH source AS (
         ,EVENT_TYPE
         ,LOYALTY_CARD_ID
         ,LOYALTY_PLAN
+        ,LOYALTY_PLAN_NAME
         ,IS_MOST_RECENT
         ,CHANNEL
         ,ORIGIN
