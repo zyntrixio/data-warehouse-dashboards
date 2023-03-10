@@ -1,5 +1,4 @@
 /*
-
 Created by:         Chris Mitchell
 Created date:       2023-03-08
 Last modified by:   
@@ -13,32 +12,24 @@ Parameters:
 
 Formatted by: SQLFMT plugin
 */
-{{
-    config(
-        materialized="table",
-    )
-}}
+WITH active_user AS (
+    SELECT * FROM "BINK"."BINK"."FACT_TRANSACTION"
 
-with
-    active_user as (select * from "BINK"."BINK"."FACT_TRANSACTION"),
     active_user_channel as (
-        select distinct user_id, channel, event_type
         from "BINK"."BINK"."FACT_USER"
+        where event_type = 'CREATED' and channel = 'LLOYDS' t.provider_slug as merchant,
         where event_type = 'CREATED' and channel = 'LLOYDS'
+        select date_ac, merchant, channel, count(distinct loyalty_id) uc.channel
     ),
+from
+    active_user_stage
     active_user_stage as (
+        from active_user t uc.channel
         select
-            date(date_trunc('month', t.event_date_time)) as date,
-            t.loyalty_id,
-            t.user_id,
-            t.provider_slug as merchant,
-            uc.channel
-        from active_user t
-        inner join active_user_channel uc on uc.user_id = t.user_id
-    )
+        ,uc.CHANNEL
+    FROM active_user t
+    INNER JOIN active_user_channel uc ON
+        uc.USER_ID = t.USER_ID
+)
 
-select date, merchant, channel, count(distinct loyalty_id)
-from active_user_stage
-group by channel, merchant, date
-order by date desc
-;
+SELECT DATE, MERCHANT, CHANNEL, COUNT(DISTINCT LOYALTY_ID) FROM active_user_stage GROUP BY CHANNEL, MERCHANT, DATE ORDER BY DATE DESC

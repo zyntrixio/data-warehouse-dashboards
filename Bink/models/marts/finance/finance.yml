@@ -1,19 +1,20 @@
 version: 2
 
 models:
-  -name: revenue_share_active
-    description: 'Table for active users on lloyds report'
-    columns: 
-      - name: USER_ID
-        tests:
-          - unique
-          - not null
-      - name: CHANNEL
-        tests:
-          - accepted_values:
-            values: ['LLOYDS']
-      - name: EVENT_TYPE
-        
-  -name: revenue_share_users
-    description: 'Table for joins and registers on lloyds report'
+
+  - name: revenue_share_users
     columns:
+      - name: report_month
+
+      - name: channel
+
+      - name: loyalty_plan_name
+      
+
+  - name: revenue_share_active
+    columns:
+      - name: date
+
+      - name: merchant
+
+      - name: channel
