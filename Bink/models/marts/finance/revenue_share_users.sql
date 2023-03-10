@@ -10,30 +10,29 @@ Description:
 Parameters:
     ref_object      
 
-Formatted by: SQLFMT plugin
 */
-with
-    joins as (
-        select * from "UAT"."BINK"."FACT_LOYALTY_CARD_ADD" where channel = 'LLOYDS'
+WITH
+    joins AS (
+        SELECT * FROM "UAT"."BINK"."FACT_LOYALTY_CARD_ADD" WHERE channel = 'LLOYDS'
     ),
 
-    select_joins as (
-        select
-            date_trunc('month', event_date_time) as report_month,
+    select_joins AS (
+        SELECT
+            date_trunc('month', event_date_time) AS report_month,
             auth_type,
             channel,
             event_type,
             loyalty_card_id,
             loyalty_plan_name
-        from joins
-        where auth_type in ('JOIN', 'REGISTER') and event_type = 'SUCCESS'
+        FROM joins
+        WHERE auth_type IN ('JOIN', 'REGISTER') AND event_type = 'SUCCESS'
     ),
-    count_joins as (
-        select report_month, channel, loyalty_plan_name, count(distinct loyalty_card_id)
-        from select_joins
-        group by channel, loyalty_plan_name, report_month
+    count_joins AS (
+        SELECT report_month, channel, loyalty_plan_name, count(distinct loyalty_card_id)
+        FROM select_joins
+        GROUP BY channel, loyalty_plan_name, report_month
     )
 
-select *
-from count_joins
-order by report_month, channel, loyalty_plan_name
+SELECT *
+FROM count_joins
+ORDER BY report_month, channel, loyalty_plan_name
