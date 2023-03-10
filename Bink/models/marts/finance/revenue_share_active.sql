@@ -8,15 +8,16 @@ Description:
 	Create table with calcs for revenue share Active Users For lloyds
 
 Parameters:
-    Ref FACT_TRANSACTION   
+    Ref FACT_TRANSACTION   FACT_USER
 
 */
+
 WITH active_user AS (
-    SELECT * FROM "BINK"."BINK"."FACT_TRANSACTION"
+    SELECT * FROM {{ref('src__fact_transaction')}}
 ),
 
 active_user_channel AS (
-    SELECT DISTINCT USER_ID, CHANNEL, EVENT_TYPE FROM "BINK"."BINK"."FACT_USER" WHERE EVENT_TYPE = 'CREATED' AND CHANNEL = 'LLOYDS'
+    SELECT DISTINCT USER_ID, CHANNEL, EVENT_TYPE FROM {{ref('src__fact_user')}} WHERE EVENT_TYPE = 'CREATED' AND CHANNEL = 'LLOYDS'
 ),
 
 active_user_stage as (
@@ -33,16 +34,16 @@ active_user_stage as (
 
 active_user_count as (
     SELECT
-        DATE_US,
-        MERCHANT,
-        CHANNEL,
+        DATE_US
+        ,MERCHANT
+        ,CHANNEL
         COUNT(DISTINCT LOYALTY_ID) AS ACTIVE_USER
     FROM
         active_user_stage
     GROUP BY
-        CHANNEL,
-        MERCHANT,
-        DATE_US
+        CHANNEL
+        ,MERCHANT
+        ,DATE_US
 )
 
 SELECT * FROM active_user_count ORDER BY DATE_US

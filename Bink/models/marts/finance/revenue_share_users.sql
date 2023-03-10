@@ -8,29 +8,41 @@ Description:
 	Create table with calcs for revenue share JOINS and REG users lloyds
 
 Parameters:
-    ref_object      
+    REF FACT_LOYALTY_CARD_ADD
 
 */
+
 WITH
     joins AS (
-        SELECT * FROM "UAT"."BINK"."FACT_LOYALTY_CARD_ADD" WHERE channel = 'LLOYDS'
-    ),
+        SELECT *
+        FROM {{ref('src__fact_lc_add')}}
+        WHERE channel = 'LLOYDS'
+    )
 
-    select_joins AS (
+    ,select_joins AS (
         SELECT
-            date_trunc('month', event_date_time) AS report_month,
-            auth_type,
-            channel,
-            event_type,
-            loyalty_card_id,
+            date_trunc('month', event_date_time) AS report_month
+            ,auth_type
+            ,channel
+            ,event_type
+            ,loyalty_card_id
             loyalty_plan_name
         FROM joins
-        WHERE auth_type IN ('JOIN', 'REGISTER') AND event_type = 'SUCCESS'
-    ),
-    count_joins AS (
-        SELECT report_month, channel, loyalty_plan_name, count(distinct loyalty_card_id)
+        WHERE auth_type
+        IN ('JOIN', 'REGISTER')
+        AND event_type = 'SUCCESS'
+    )
+    ,count_joins AS (
+        SELECT
+            report_month
+            ,channel
+            ,loyalty_plan_name
+            ,count(distinct loyalty_card_id)
         FROM select_joins
-        GROUP BY channel, loyalty_plan_name, report_month
+        GROUP BY
+            channel 
+            ,loyalty_plan_name 
+            ,report_month
     )
 
 SELECT *
