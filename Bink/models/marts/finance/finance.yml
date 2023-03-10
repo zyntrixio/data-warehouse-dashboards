@@ -1,0 +1,22 @@
+version: 2
+
+models:
+
+  - name: revenue_share_users
+    columns:
+      - name: report_month
+
+      - name: channel
+
+      - name: loyalty_plan_name
+      
+
+  - name: revenue_share_active
+    columns:
+      - name: date
+
+      - name: merchant
+
+      - name: channel
+
+      - name: ACTIVE_USER
