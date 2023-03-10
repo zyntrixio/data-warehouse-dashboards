@@ -13,7 +13,7 @@ models:
 
   - name: revenue_share_active
     columns:
-      - name: date_us
+      - name: date
 
       - name: merchant
 

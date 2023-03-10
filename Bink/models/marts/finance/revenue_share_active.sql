@@ -22,7 +22,7 @@ active_user_channel AS (
 
 active_user_stage as (
     SELECT
-        DATE(DATE_TRUNC('month', t.EVENT_DATE_TIME)) AS DATE_US
+        DATE(DATE_TRUNC('month', t.EVENT_DATE_TIME)) AS DATE
         ,t.LOYALTY_ID
         ,t.USER_ID
         ,t.PROVIDER_SLUG AS MERCHANT
@@ -34,7 +34,7 @@ active_user_stage as (
 
 active_user_count as (
     SELECT
-        DATE_US
+        DATE
         ,MERCHANT
         ,CHANNEL
         ,COUNT(DISTINCT LOYALTY_ID) AS ACTIVE_USER
@@ -43,7 +43,7 @@ active_user_count as (
     GROUP BY
         CHANNEL
         ,MERCHANT
-        ,DATE_US
+        ,DATE
 )
 
-SELECT * FROM active_user_count ORDER BY DATE_US
+SELECT * FROM active_user_count ORDER BY DATE
