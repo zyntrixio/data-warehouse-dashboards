@@ -15,13 +15,6 @@ WITH source AS (
         ,LAST_LOGIN
         ,MARKETING_CODE_ID
         ,SALT
-        ,MAGIC_LINK_VERIFIED
-        ,CITY
-        ,REGION
-        ,COUNTRY
-        ,CURRENCY
-        ,PASS_CODE
-        ,NOTIFICATIONS
     FROM source
 )
 
