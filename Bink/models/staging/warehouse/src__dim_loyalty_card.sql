@@ -13,10 +13,6 @@ WITH source AS (
         ,REGISTER_STATUS
         ,REGISTER_DATE_TIME
         ,UPDATED
-        ,STATUS_ID
-        ,STATUS
-        ,STATUS_TYPE
-        ,STATUS_ROLLUP
         ,LINK_DATE
         ,CREATED
         ,ORDERS
