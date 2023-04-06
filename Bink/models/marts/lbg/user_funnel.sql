@@ -19,6 +19,8 @@ with lc as (
         {{ref('src__fact_lc_add')}}
     where
         channel = 'LLOYDS'
+    AND
+        LOYALTY_PLAN_NAME NOT IN ('Bink Sweet Rewards','Loyalteas Plus')
 ),
 lc_group as (
     SELECT
