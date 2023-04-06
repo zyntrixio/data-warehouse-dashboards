@@ -9,14 +9,16 @@ Description:
 Notes:
     
 Parameters:
-
+    src__fact_lc_add
 */
 
 with lc as (
     select
-        *
+        * -- distinct external_user_ref
     from
         {{ref('src__fact_lc_add')}}
+    where
+        channel = 'LLOYDS'
 ),
 lc_group as (
     SELECT
@@ -81,112 +83,71 @@ user_count_up as (
         lc_group,
         auth_type,
         LOYALTY_PLAN_NAME
-),
-count_up as (
-    select
-        failures,
-        auth_type,
-        loyalty_plan_name,
-        count(
-            CASE
-                WHEN resolved > 0 THEN lc_group
-            END
-        ) successes,
-        count(
-            CASE
-                WHEN resolved = 0 tHEN lc_group
-            END
-        ) end_states,
-        count(
-            CASE
-                WHEN resolved > 0 THEN lc_group
-            END
-        ) / count(lc_group) as success_rate
-    from
-        user_count_up
-    group by
-        failures,
-        auth_type,
-        loyalty_plan_name
-),
-count_up as (
-    select
-        failures,
-        auth_type,
-        loyalty_plan_name,
-        count(
-            CASE
-                WHEN resolved > 0 THEN lc_group
-            END
-        ) successes,
-        count(
-            CASE
-                WHEN resolved = 0 THEN lc_group
-            END
-        ) end_states,
-        count(
-            CASE
-                WHEN resolved > 0 THEN lc_group
-            END
-        ) / count(lc_group) as success_rate
-    from
-        user_count_up
-    group by
-        failures,
-        auth_type,
-        loyalty_plan_name
-),
-window_count as (
-    SELECt
-        failures,
-        auth_type,
-        loyalty_plan_name,
-        successes,
-        end_states,
-        success_rate,
-        sum(successes + end_states) over (
-            partition by auth_type,
-            loyalty_plan_name
-            order by
-                failures desc rows between unbounded preceding
-                and current row
-        ) total,
-        sum(successes) over (
-            partition by auth_type,
-            loyalty_plan_name
-            order by
-                failures desc rows between unbounded preceding
-                and current row
-        ) cumulative_success,
-        sum(end_states) over (
-            partition by auth_type,
-            loyalty_plan_name
-            order by
-                failures desc rows between unbounded preceding
-                and current row
-        ) cumulative_fail
-    from
-        count_up
-),
-window_count_2 as (
-    select
-        failures,
-        auth_type,
-        loyalty_plan_name,
-        total,
-        successes,
-        end_states,
-        success_rate,
-        cumulative_success,
-        cumulative_success / (cumulative_success + cumulative_fail) as cumulative_success_rate
-    from
-        window_count
 )
-select
+
+,new_user_count_up as (
+    select
+        *,
+        failures + resolved as attempt
+    from
+        user_count_up
+),
+new_count_up as (
+    select
+        attempt,
+        auth_type,
+        loyalty_plan_name,
+        count(
+            CASE
+                WHEN resolved = 1 then resolved
+            end
+        ) successes,
+        count(
+            CASE
+                WHEN resolved = 0 then resolved
+            end
+        ) end_state
+    from
+        new_user_count_up
+    group by
+        attempt,
+        auth_type,
+        loyalty_plan_name
+),
+new_window_count AS (
+    SELECT
+        attempt,
+        auth_type,
+        loyalty_plan_name,
+        successes,
+        end_state,
+        sum(successes + end_state) OVER (
+            PARTITION BY auth_type,
+            loyalty_plan_name
+            ORDER BY
+                attempt DESC ROWS BETWEEN UNBOUNDED PRECEDING
+                AND current ROW
+        ) AS total
+    FROM
+        new_count_up
+),
+add_failures_precentages AS (
+    SELECT
+        attempt,
+        auth_type,
+        loyalty_plan_name,
+        successes,
+        end_state,
+        total,
+        total - successes AS failures,
+        successes/total AS success_rate,
+       end_state/total AS drop_off_rate
+    FROM
+        new_window_count
+)
+SELECT
     *
-from
-    window_count_2
-order by
-    loyalty_plan_name,
-    auth_type,
-    failures
+FROM
+    add_failures_precentages
+ORDER BY
+    attempt
