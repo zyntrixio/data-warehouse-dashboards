@@ -12,99 +12,99 @@ Parameters:
     src__fact_lc_add
 */
 
-with lc as (
-    select
+WITH lc AS (
+    SELECT
         *
-    from
+    FROM
         {{ref('src__fact_lc_add')}}
-    where
+    WHERE
         channel = 'LLOYDS'
     AND
         LOYALTY_PLAN_NAME NOT IN ('Bink Sweet Rewards','Loyalteas Plus')
-),
-lc_group as (
+)
+,lc_group AS (
     SELECT
-        EXTERNAL_USER_REF,
-        EVENT_DATE_TIME,
-        AUTH_TYPE,
-        EVENT_TYPE,
-        LOYALTY_CARD_ID,
-        LOYALTY_PLAN_NAME,
-        SUM(
+        EXTERNAL_USER_REF
+        ,EVENT_DATE_TIME
+        ,AUTH_TYPE
+        ,EVENT_TYPE
+        ,LOYALTY_CARD_ID
+        ,LOYALTY_PLAN_NAME
+        ,SUM(
             CASE
                 WHEN EVENT_TYPE = 'SUCCESS' THEN 1
                 ELSE 0
             END
         ) OVER (
-            PARTITION BY EXTERNAL_USER_REF,
-            LOYALTY_PLAN,
-            AUTH_TYPE
+            PARTITION BY
+                EXTERNAL_USER_REF
+                ,LOYALTY_PLAN
+                ,AUTH_TYPE
             ORDER BY
                 EVENT_DATE_TIME ASC
-        ) as lc_group
-    from
+        ) AS lc_group
+    FROM
         lc
-),
-lc_group2 as (
+)
+,lc_group2 AS (
     SELECT
-        EXTERNAL_USER_REF,
-        EVENT_DATE_TIME,
-        AUTH_TYPE,
-        EVENT_TYPE,
-        LOYALTY_CARD_ID,
-        LOYALTY_PLAN_NAME,
-        CASE
+        EXTERNAL_USER_REF
+        ,EVENT_DATE_TIME
+        ,AUTH_TYPE
+        ,EVENT_TYPE
+        ,LOYALTY_CARD_ID
+        ,LOYALTY_PLAN_NAME
+        ,CASE
             WHEN EVENT_TYPE = 'SUCCESS' THEN lc_group -1
             ELSE lc_group
         END as lc_group
     from
         lc_group
-),
-user_count_up as (
-    select
-        EXTERNAL_USER_REF,
-        LOYALTY_PLAN_NAME,
-        auth_type,
-        lc_group,
-        sum(
+)
+,user_count_up AS (
+    SELECT
+        EXTERNAL_USER_REF
+        ,LOYALTY_PLAN_NAME
+        ,auth_type
+        ,lc_group
+        ,sum(
             CASE
                 WHEN EVENT_TYPE = 'FAILED' THEN 1
                 ELSE 0
             END
-        ) as failures,
-        sum(
+        ) as failures
+        ,sum(
             CASE
                 WHEN EVENT_TYPE = 'SUCCESS' THEN 1
                 ELSE 0
             END
-        ) as resolved
-    from
+        ) AS resolved
+    FROM
         lc_group2
-    group by
-        external_user_ref,
-        lc_group,
-        auth_type,
-        LOYALTY_PLAN_NAME
+    GROUP BY
+        external_user_ref
+        ,lc_group
+        ,auth_type
+        ,LOYALTY_PLAN_NAME
 )
-
-,new_user_count_up as (
-    select
+,new_user_count_up AS (
+    SELECT
         *,
-        failures + resolved as attempt
-    from
+        failures + resolved AS attempt
+    FROM
         user_count_up
-),
-new_count_up as (
-    select
-        attempt,
-        auth_type,
-        loyalty_plan_name,
-        count(
+)
+,new_count_up AS (
+    SELECT
+        attempt
+        ,auth_type
+        ,loyalty_plan_name
+        ,count(
             CASE
                 WHEN resolved = 1 then resolved
             end
-        ) successes,
-        count(
+        ) successes
+        ,count(
             CASE
                 WHEN resolved = 0 then resolved
             end
@@ -112,18 +112,18 @@ new_count_up as (
     from
         new_user_count_up
     group by
-        attempt,
-        auth_type,
-        loyalty_plan_name
-),
-new_window_count AS (
+        attempt
+        ,auth_type
+        ,loyalty_plan_name
+)
+,new_window_count AS (
     SELECT
-        attempt,
-        auth_type,
-        loyalty_plan_name,
-        successes,
-        end_state,
-        sum(successes + end_state) OVER (
+        attempt
+        ,auth_type
+        ,loyalty_plan_name
+        ,successes
+        ,end_state
+        ,sum(successes + end_state) OVER (
             PARTITION BY auth_type,
             loyalty_plan_name
             ORDER BY
@@ -132,18 +132,18 @@ new_window_count AS (
         ) AS total
     FROM
         new_count_up
-),
-add_failures_precentages AS (
+)
+,add_failures_precentages AS (
     SELECT
-        attempt,
-        auth_type,
-        loyalty_plan_name,
-        successes,
-        end_state,
-        total,
-        total - successes AS failures,
-        successes/total AS success_rate,
-       end_state/total AS drop_off_rate
+        attempt
+        ,auth_type
+        ,loyalty_plan_name
+        ,successes
+        ,end_state
+        ,total
+        ,total - successes AS failures
+        ,successes/total AS success_rate
+       ,end_state/total AS drop_off_rate
     FROM
         new_window_count
 )
