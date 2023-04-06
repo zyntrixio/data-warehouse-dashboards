@@ -189,4 +189,4 @@ from
 order by
     loyalty_plan_name,
     auth_type,
-    failures;
+    failures
