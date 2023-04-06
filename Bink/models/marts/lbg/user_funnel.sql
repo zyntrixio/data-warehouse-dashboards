@@ -14,7 +14,7 @@ Parameters:
 
 with lc as (
     select
-        * -- distinct external_user_ref
+        *
     from
         {{ref('src__fact_lc_add')}}
     where
