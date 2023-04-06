@@ -16,7 +16,7 @@ with lc as (
     select
         *
     from
-        {{ref('src_lc_add')}}
+        {{ref('src__fact_lc_add')}}
 ),
 lc_group as (
     SELECT

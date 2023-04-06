@@ -28,6 +28,28 @@ models:
       - name: DAILY_DEREGISTRATIONS
         description: Total number of deregisterations on the day
 
+
+  - name: user_funnel
+    description: Output a funnel view of user journey, with counts for sucess, fail, and dropoff.
+    columns:
+      - name: FAILURES
+
+      - name: AUTH_TYPE
+
+      - name: LOYALTY_PLAN_NAME
+
+      - name: TOTAL
+
+      - name: SUCCESSES
+
+      - name: END_STATES
+
+      - name: SUCCESS_RATE
+
+      - name: CUMULATIVE_SUCCESS
+
+      - name: CUMULATIVE_SUCCESS_RATE
+
   - name: user_snapshot
     description: Status counts per day on usergranularity
     columns:
